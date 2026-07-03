@@ -3,6 +3,7 @@ name: schematize-engineering
 metadata:
   version: 0.1.0
 description: Padrões normativos de engenharia da casa — a BASE comum, agnóstica de linguagem, que se repete em toda a stack (arquitetura/DDD, MAPA+grafo+endpoints, segurança, dados/eventos, cadeia de suprimentos, observabilidade, operação/DoD/archive, anti-padrões, gestão de contexto). Use SEMPRE que for projetar, gerar, revisar ou refatorar qualquer software, decidir arquitetura, escolher stack, modelar eventos/banco, configurar observabilidade, ou produzir ADR/runbook/archive — mesmo sem citar "padrão". Contém pisos inegociáveis (segredo nunca no cliente, sem SQL concatenado, auth server-side, índice/MAPA exaustivo, archive obrigatório) que vetam atalhos inseguros. Detalhe por linguagem nas skills irmãs: schematize-go/rust (backend), schematize-web (frontend), schematize-node (legado). Pentest é a schematize-pentest.
+---
 
 # Padrões de Engenharia da Casa (base comum)
 
