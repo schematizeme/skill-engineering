@@ -24,7 +24,7 @@ Depois, copie a regra sempre-on: `.claude/skills/schematize-engineering/assets/C
 
 ## Comandos
 
-`/eng-help` · `/eng-load` · `/eng-claude` · `/eng-index` · `/eng-review` · `/eng-qa` · `/eng-cc` · `/eng-handoff`.
+`/eng-help` · `/eng-load` · `/eng-claude` · `/eng-index` · `/eng-review` · `/eng-qa` · `/eng-orchestrate` · `/eng-cc` · `/eng-handoff`.
 
 ## Formato
 
