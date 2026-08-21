@@ -92,7 +92,7 @@ Uma task está pronta quando, cumulativamente:
 - [ ] Observabilidade implementada (logs, métricas, traces, audit se aplicável)
 - [ ] OpenAPI atualizada (se for API)
 - [ ] Migration testada com rollback (se houver schema change)
-- [ ] **Nenhum efeito externo real fora de `prd` (se o projeto envia e-mail/SMS/push/webhook/cobrança):** provider default = sink, guard deny-by-default no provider (com teste que **vê a recusa**), cap por execução, endereços só no **domínio de teste em rota nula** (`efeitos-externos.md`, §37 item 49)
+- [ ] **Nenhum efeito externo real fora de `prd` (se o projeto envia e-mail/SMS/push/webhook/cobrança):** provider default = sink, guard deny-by-default no provider (com teste que **vê a recusa**), cap por execução, endereços só no **domínio de teste em rota nula** (`references/efeitos-externos.md`; anti-padrão em `references/anti-padroes.md` §37, item *"Disparar efeito externo REAL a partir de não-produção"*)
 - [ ] Documentação atualizada (README, ADR, runbook se aplicável)
 - [ ] Smoke tests executados em staging **(com asserção de conteúdo e self-check anti verde-mentiroso — skill `schematize-qa`)**
 - [ ] CI verde, code review aprovado

@@ -40,7 +40,7 @@ identifique o **caminho crítico**.
 humano), não uma pergunta bloqueante à toa.
 
 **2.6 Arquitetura & ADR.** Decisão que molda a estrutura (escolha de padrão, limite de
-serviço, contrato, store) vira **ADR** (`assets/ADR.md`, §27): contexto, opções, decisão,
+serviço, contrato, store) vira **ADR** (`references/operacao.md` §27; template em `assets/ADR.md`): contexto, opções, decisão,
 consequência. Decisão sem ADR é decisão que se perde.
 
 **2.7 Paralelização.** ≥3 unidades independentes (sem alvo de escrita comum, sem ordem

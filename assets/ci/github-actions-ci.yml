@@ -14,13 +14,15 @@ jobs:
       - name: Gate de padrões (DoD/§37) no diff
         run: bash .claude/skills/schematize-engineering/scripts/check-diff.sh "origin/${{ github.base_ref || 'main' }}"
       - name: Índice de microfunções atualizado (§39)
-        run: |
-          node .claude/skills/schematize-engineering/scripts/build-index.mjs ./internal > /tmp/idx.md || true
-          # compara com o commitado; descomente quando o índice estiver versionado:
-          # diff -q /tmp/idx.md <projeto>/<projeto>_archive/index/INDEX_FUNCTIONS.md
+        env:
+          # Sem estes dois o gate NAO roda — e nao rodar REPROVA. Gate desarmado em silencio
+          # ("|| true" + diff comentado) foi o achado A5 da vistoria de 2026-08-21.
+          INDEX_SRC: ${{ vars.INDEX_SRC || './internal' }}
+          INDEX_FILE: ${{ vars.INDEX_FILE }}
+        run: bash .claude/skills/schematize-engineering/scripts/check-index.sh
       - name: Scan de segredo no archive (§16.1/§32)
         run: bash .claude/skills/schematize-engineering/scripts/archive-secret-scan.sh .
-      - name: Efeito externo não escapa de não-produção (§37 item 49)
+      - name: Efeito externo não escapa de não-produção (§37, "Disparar efeito externo REAL a partir de não-produção")
         env:
           TEST_MAIL_DOMAIN: test.<domain>   # ajuste; o gate confere o null MX por dig
         run: bash .claude/skills/schematize-engineering/scripts/check-external-effects.sh .
@@ -29,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Smoke + security + authz + hardening (PR — testes/Q.A.: schematize-qa)
+      - name: "Smoke + security + authz + hardening (PR — testes/Q.A.: schematize-qa)"
         run: |
           # <projeto> test smoke && <projeto> test security && <projeto> test authz && <projeto> test hardening
           echo "ligue ao CLI <projeto>_ops aqui"

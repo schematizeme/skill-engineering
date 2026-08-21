@@ -1,5 +1,16 @@
 # Filosofia, Aplicação Universal e Anti-Padrões Vetados
 
+> **CITE ESTES ITENS PELO TÍTULO, NUNCA PELO NÚMERO.** A numeração é **local desta skill** e
+> **diverge entre as irmãs**: o mesmo `§37 item 45` é *"authz hand-rolled"* aqui, *"bloquear o
+> scheduler da BEAM"* na `schematize-elixir` e *"dois serviços no mesmo user Linux"* na
+> `schematize-ruby`; o item 49 é *"efeito externo real fora de prd"* na base, não existe em três
+> skills e é *"ReleaseFast sem profiling"* na `schematize-zig`. Os máximos vão de 46 a 53. Um
+> ponteiro `§37 item N` cruzando skills aponta para outra coisa — e um dentro da própria skill
+> apodrece assim que alguém insere um item no meio (foi o que aconteceu com a citação a *"item 48"*
+> em `references/iam.md`, quando esta lista terminava no 46). **Forma correta:** §37, *"<título do
+> item>"*.
+
+
 > Parte da skill **schematize-engineering**. As referências cruzadas (§N) apontam para seções do corpo completo — todas presentes no conjunto de references desta skill.
 
 ## Índice

@@ -136,10 +136,13 @@ GitFlow (`develop`) é opcional e exige justificativa — só vale a pena em tim
 Toda decisão arquitetural relevante vira ADR.
 
 ```
-/docs/adr/
+<projeto>/<projeto>_archive/decisoes/
   0001-use-postgresql.md
   0002-adopt-hexagonal-architecture.md
 ```
+
+> **Caminho único de ADR da casa:** `<projeto>/<projeto>_archive/decisoes/`. É onde o `/docs-adr` grava, onde a `/archive-todos` procura e onde a `/audit-run` audita — o mesmo lugar nos três. Antes de 2026-08-21 havia **quatro** caminhos concorrentes (`/docs/adr/`, `docs/adr/`, `_archive/decisoes/`, `archive/adr/`), o que tornava o piso *"ADR `proposed` é órfão RED"* inexequível por construção (achado B2b).
+
 
 Formato MADR. Status: `proposed`, `accepted`, `deprecated`, `superseded by NNNN`.
 
@@ -175,7 +178,7 @@ Formato MADR. Status: `proposed`, `accepted`, `deprecated`, `superseded by NNNN`
 - **`<projeto>_archive/` = durável, é um REPO git, NÃO é gitignored.** Entra versionado, tem remote privado próprio, é a memória durável do projeto.
 - **`.schematize/` = operacional volátil, GITIGNORED.** Estado vivo que o app/overdev desenha e reescreve (grafos operacionais, checklist/plano do ciclo). O espelho durável do que importa é copiado pro `<projeto>_archive/`.
 
-**Todo `.md` gerado pela skill/agente mora em `<projeto>/<projeto>_archive/`, NUNCA no root do projeto nem no root de um microserviço.** Isso vale para MAPA, índices, planos, relatórios, handoffs, checkpoints — qualquer artefato gerado. Os roots ficam **limpos**: só código, config e os poucos MDs mantidos à mão por humano (`README.md`, `CLAUDE.md`, `LICENSE`, e ADRs se o projeto os versiona em `docs/adr/`). Largar MAPA/índice/plano/relatório no root é **violação** (§37) e fere a contenção de workspace.
+**Todo `.md` gerado pela skill/agente mora em `<projeto>/<projeto>_archive/`, NUNCA no root do projeto nem no root de um microserviço.** Isso vale para MAPA, índices, planos, relatórios, handoffs, checkpoints — qualquer artefato gerado. Os roots ficam **limpos**: só código, config e os poucos MDs mantidos à mão por humano (`README.md`, `CLAUDE.md`, `LICENSE`, e o `CHANGELOG.md`). Largar MAPA/índice/plano/relatório no root é **violação** (§37) e fere a contenção de workspace.
 
 Subpastas canônicas (todas versionadas no repo do archive):
 
@@ -234,7 +237,7 @@ Conteúdo: contexto, objetivo, checklist, decisões, blockers, progresso. **Atua
 **MUST**
 - O archive é **verificável**: PR sem o `.md` correspondente (quando a regra acima exige) **não passa no review** (item de checklist de §35).
 - Gerar o archive é passo do fluxo, não tarefa separada que pode ser cortada por falta de tempo. **Falta de tempo não revoga a §28.**
-- Assistente de IA que produz código nesta base **gera o `.md` do archive na mesma entrega** — pular isso é violação direta (§37, item 28).
+- Assistente de IA que produz código nesta base **gera o `.md` do archive na mesma entrega** — pular isso é violação direta (§37, *"Pular o archive/MD para ir mais rápido"*).
 
 > Registro indiscriminado de toda interação produz ruído. Registro seletivo do que importa produz contexto histórico útil. **Mas "seletivo" é sobre o quê registrar, nunca sobre se registrar quando a regra manda.**
 

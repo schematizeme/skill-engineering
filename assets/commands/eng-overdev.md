@@ -61,9 +61,18 @@ continua os outros. Prefira **assumir um default razoável e documentá-lo** a p
 quando o erro for reversível.
 
 ## Como TERMINAR (as únicas saídas legítimas)
-- **Concluído:** nenhum `- [ ]` aberto (tudo `- [x]` ou `- [~]`) **e** `.schematize/overdev/gate.sh`
-  passa → `schematize overdev stop` e reporte ao usuário: resultado + evidência + **itens
-  on-hold e as perguntas de `PERGUNTAS-OVERDEV.txt`**.
+- **Concluído:** **nenhum item aberto nas TRÊS classes** — nem `- [ ]` (máquina), nem `- [H ]`
+  (humano), nem `- [~]` (on-hold) — **e** `.schematize/overdev/gate.sh` passa → `schematize overdev
+  stop` e reporte ao usuário: resultado + evidência.
+  **`- [~]` NÃO é conclusão.** On-hold cuja pergunta ninguém respondeu é **órfão RED** para a
+  `schematize-audit` (`SKILL.md` §"Nenhum checklist criado fica órfão") — e a regra da audit é a
+  que vale, porque é ela quem dá o veredito no fim. Sobrando `- [H ]` ou `- [~]`, a saída legítima
+  **não é "concluído"**: é **`BLOCKED`** (abaixo), listando os itens humanos e as perguntas
+  parkeadas. O Stop hook cobra isso — ele conta as três classes.
+- **Bloqueado (`BLOCKED`):** sobra o que **só o usuário** fecha — item `- [H ]`, pergunta `- [~]`
+  sem resposta, credencial/decisão irreversível/dependência externa. Escreva
+  `.schematize/overdev/BLOCKED` com **o motivo e a pergunta**, item a item, e só então pare. É a
+  saída honesta do checklist que não fechou — não confundir com "concluído".
 - **Budget/thrashing:** estourou `--max` ou vários ciclos sem progresso → parkeia os itens
   travados, `schematize overdev stop`, post-mortem do que falta. Guardrail, não desistência.
 
@@ -76,7 +85,7 @@ Mostre a tabela do checklist (feitos/abertos), `iterations`, `max_iters`, últim
 `premature-stops.log`. Não altera nada.
 
 ## `stop`
-Parada manual do usuário: ponha `mode=stopped` no `.schematize/overdev/state` (o hook volta a inerte).
+Parada manual do usuário: ponha `"mode": "stopped"` no `.schematize/overdev/state.json` (o hook volta a inerte).
 Use só quando VOCÊ (usuário) mandar — o agente não se auto-libera por aqui.
 
 > Regra de ouro: no overdev, o **checklist é o juiz**. O agente não decide que terminou —

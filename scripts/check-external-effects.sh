@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # check-external-effects.sh — gate determinístico do piso "efeito externo NUNCA sai de
-# não-produção" (SKILL.md; references/efeitos-externos.md; §37 item 49).
+# não-produção" (SKILL.md; normativa em `schematize-engineering` -> references/efeitos-externos.md;
+# anti-padrão §37 "Disparar efeito externo REAL a partir de não-produção" — citado por TÍTULO,
+# porque a numeração do §37 diverge entre skills).
+#
+# Este arquivo é DISTRIBUÍDO IDÊNTICO a toda skill que declara o piso: instalar só a skill de
+# linguagem (sem a base) não pode deixar o projeto sem o gate. Até 2026-08-21 ele existia em
+# UM lugar só e o piso vivia como prosa nas outras — o agravante registrado na vistoria.
 #
 # Uso:  bash scripts/check-external-effects.sh [dir]            (default: .)
 #       TEST_MAIL_DOMAIN=test.exemplo.com bash scripts/check-external-effects.sh
@@ -87,7 +93,8 @@ fi
 
 if (( FAIL )); then
   echo "${RED}== FALHOU: efeito externo pode escapar de não-produção. ==${RST}"
-  echo "Piso: references/efeitos-externos.md · anti-padrão §37 item 49."
+  echo "Piso: schematize-engineering -> references/efeitos-externos.md"
+  echo "      anti-padrão §37 'Disparar efeito externo REAL a partir de não-produção'."
   exit 1
 fi
 echo "${GRN}== OK: nenhum efeito externo real detectado fora de produção. ==${RST}"

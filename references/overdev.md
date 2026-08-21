@@ -13,7 +13,9 @@ Roda **só quando você chama** `/eng-overdev`. O hook é **inerte** sem um over
 de plano raso, retrabalho e "reabrir o que já foi combinado". A Fase 0 é **obrigatória** e é
 a **primeira coisa** que o run faz — o laço (§2) só começa quando ela fecha (§0.4).
 
-**0.1 Colher o que já foi debatido e ACORDADO no contexto atual.** Varra a conversa/sessão
+### 0.1 Colher o que já foi debatido e ACORDADO no contexto atual
+
+Varra a conversa/sessão
 inteira e extraia as **decisões acordadas** (as fechadas, não as abandonadas): o que foi
 combinado, por quê, qual alternativa foi descartada, restrições e defaults aceitos. Grava em
 **`.schematize/overdev/DECISOES.md`** (+ espelho no `<projeto>/<projeto>_archive/overdev/`) em formato **ADR-lite**:
@@ -21,7 +23,9 @@ combinado, por quê, qual alternativa foi descartada, restrições e defaults ac
 e **trava o que já foi fechado** (não se re-debate). O que ficou **em aberto/ambíguo** → não
 inventa: vira candidato a `- [~]` on-hold (parkeia, §4), não segura a fundação.
 
-**0.2 Carregar o GRAFO do index (se existir).** Rode/leia `/eng-index` (§39): o **MAPA** e os
+### 0.2 Carregar o GRAFO do index (se existir)
+
+Rode/leia `/eng-index` (§39): o **MAPA** e os
 grafos de serviço/chamadas em `<projeto>/<projeto>_archive/index/` (`INDEX_GLOBAL.md`, `INDEX_FUNCTIONS.md`,
 `MAPA.md` — adjacência `A -> B`). O plano se **ancora no grafo real**: cada item aponta o(s)
 **nó(s)** que toca (função/serviço/`arquivo:linha`) e as **arestas** afetadas (quem chama / é
@@ -29,7 +33,9 @@ chamado). Sem index ainda? **gerá-lo é o 1º item do checklist**; ou registre 
 planeje pela enumeração de rotas/funções. O grafo é o que liga o plano ao código de verdade —
 **e é o que o painel/tela de grafos consome** (§8).
 
-**0.3 Planejamento PESADO (plan-first de verdade, não uma lista rasa).** Só depois de 0.1+0.2,
+### 0.3 Planejamento PESADO (plan-first de verdade, não uma lista rasa)
+
+Só depois de 0.1+0.2,
 produza o **PLANO** em **`.schematize/overdev/PLAN.md`** (+ archive):
 - **Objetivo e escopo** (o que entra / o que **NÃO** entra), ancorado nas decisões (0.1).
 - **Decomposição** em fases e itens **verificáveis**, cada item com: nó(s) do grafo que toca,
@@ -43,7 +49,9 @@ produza o **PLANO** em **`.schematize/overdev/PLAN.md`** (+ archive):
 O PLANO **gera o CHECKLIST** (§1): o checklist é a **projeção executável do plano**, exaustivo
 por contagem — não uma lista solta.
 
-**0.4 Gate da Fase 0.** Só entra no laço (§2) quando: `DECISOES.md` colhido, **grafo carregado**
+### 0.4 Gate da Fase 0
+
+Só entra no laço (§2) quando: `DECISOES.md` colhido, **grafo carregado**
 (ou ausência registrada + item de gerá-lo), **`PLAN.md` pesado** escrito, e `CHECKLIST.md`
 **derivado do plano**. Começar a tickar sem a fundação é a macaquice que a Fase 0 existe para
 matar — "planejamento pesado antes de começar".

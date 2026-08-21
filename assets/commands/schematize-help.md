@@ -27,7 +27,7 @@ Uma tabela por skill **instalada**, na ordem: `schematize-engineering` (base), `
 
 Padrões comuns a quase todas (explique 1 vez, no topo, pra não repetir 6×):
 - `/<slug>-help` — comandos daquela skill · `/<slug>-load` — carrega TODO o corpo normativo · `/<slug>-claude` — instala/mescla o `CLAUDE.md` sempre-on · `/<slug>-index` — (re)gera índice/MAPA no `<projeto>/<projeto>_archive/index/` · `/<slug>-review` — gate da DoD/anti-padrões no diff · `/<slug>-cc` / `/<slug>-handoff` — context compact / handoff no archive.
-- **Q.A./testes** têm skill própria: **`schematize-qa`** (`/qa-plan` → `/qa-run`, `/qa-help`), que absorveu o antigo `/eng-qa`. As skills de linguagem ainda trazem um `/<slug>-qa` de conveniência, mas a **disciplina** (pirâmide, "verde de verdade", a11y/visual, contrato/dados, flaky, cobertura, plan-first) mora na `schematize-qa`. **Segurança ofensiva** é a `schematize-pentest`.
+- **Q.A./testes** têm skill própria: **`schematize-qa`** (`/qa-plan` → `/qa-run`, `/qa-help`), que absorveu o antigo `eng-qa`. As skills de linguagem ainda trazem um `/<slug>-qa` de conveniência, mas a **disciplina** (pirâmide, "verde de verdade", a11y/visual, contrato/dados, flaky, cobertura, plan-first) mora na `schematize-qa`. **Segurança ofensiva** é a `schematize-pentest`.
 - Depois liste **só os comandos próprios** de cada skill (os que fogem do padrão), com destaque: ex. `/eng-orchestrate`, `/eng-overdev`, `/eng-scan`, `/eng-plan`, `/eng-refactor`, `/eng-audit`, `/node-audit`, `/node-migrate-status`, `/pentest-plan`, `/pentest-endpoints`, `/pentest-authz`, `/pentest-threat-model`, `/pentest-report`.
 
 ## 3. Legenda das skills (o que existe, instalado ou não)

@@ -1,9 +1,9 @@
 # Testes / Q.A. → skill dedicada `schematize-qa`
 
 > **Movido.** A disciplina de testes/Q.A. da casa foi **extraída** desta skill para a skill dedicada
-> **`schematize-qa`**. O que antes vivia aqui (§22.1–§23: test kit, "verde de verdade", categorias de
+> **`schematize-qa`**. O que antes vivia aqui (a antiga seção 22 desta skill: test kit, "verde de verdade", categorias de
 > teste, cobertura, smoke, unit agressivo, mutation, Q.A. plan-first, Makefile de teste) e em
-> `testes-execucao.md` agora mora lá, junto com o conteúdo novo (pirâmide, teste de comportamento,
+> a antiga reference *testes-execucao* agora mora lá, junto com o conteúdo novo (pirâmide, teste de comportamento,
 > a11y, regressão visual, contrato/dados, flaky).
 
 ## O que a `schematize-engineering` mantém (piso mínimo)
@@ -26,7 +26,7 @@ Só o **piso** que a base não abre mão, delegando o **COMO** pra `schematize-q
 | Unit/componente/integração/e2e/smoke/a11y/visual/contrato/dados, `simulated` | `schematize-qa` → `references/categorias.md` |
 | Flaky tests (detecção, determinismo, quarentena) | `schematize-qa` → `references/flaky.md` |
 | Plan-first, test kit, `summary.json`, seeds, CI, Makefile | `schematize-qa` → `references/execucao.md` |
-| Q.A. plan-first (comando) | `/qa-plan` → `/qa-run` (era `/eng-qa`) |
+| Q.A. plan-first (comando) | `/qa-plan` -> `/qa-run` (era `eng-qa`, removido na v0.15.1) |
 
 > **Segurança ofensiva** (pentest de rejeição, injeção/coerção, IDOR/BOLA, cross-tenant, hardening,
 > red-team) **não** é Q.A. — é a **`schematize-pentest`**. **Auditoria de histórico** (os checklists

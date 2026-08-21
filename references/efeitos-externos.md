@@ -89,7 +89,7 @@ fn assert_deliverable(to, env, allowlist):
 ```
 
 O `Err` é **erro de programação**, não erro do usuário: aparece no teste, no CI e no log — e
-ensina o caminho certo na própria mensagem (`references/anti-padroes.md` §48, mensagem acionável).
+ensina o caminho certo na própria mensagem (`references/anti-padroes.md` §37, item *"A mensagem de erro ENSINA o caminho certo"* — por título, não por número: a numeração dos itens diverge entre skills).
 
 ## 3. Defesa em profundidade — as 4 camadas
 

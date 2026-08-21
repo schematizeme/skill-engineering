@@ -15,7 +15,7 @@
         ]
       }
     ],
-    "_comment_overdev": "Modo OVERDEV (/eng-overdev): rejeita parada até o checklist fechar. INERTE quando não há .schematize/overdev/state (nem .overdev/state legado) ativo — seguro deixar registrado. Aponte pro overdev-stop.sh instalado (skill ou .claude/hooks/).",
+    "_comment_overdev": "Modo OVERDEV (/eng-overdev): rejeita parada até o checklist fechar. INERTE quando não há .schematize/overdev/state.json com mode=active (o formato `state` KEY=VALUE segue aceito por compat) — seguro deixar registrado. Aponte pro overdev-stop.sh instalado (skill ou .claude/hooks/).",
     "Stop": [
       {
         "hooks": [

@@ -16,10 +16,12 @@ git. Conte-os (é o alvo de cobertura; artefato de fora = auditoria incompleta):
   `<projeto>/<projeto>_archive/overdev/premature-stops.log`, `./PERGUNTAS-OVERDEV.txt`,
   `.schematize/overdev/DECISOES.md` / `PLAN.md`.
 - **Q.A.:** `<projeto>/<projeto>_archive/qa/*.md` (planos plan-first).
-- **Contexto/handoff:** `<projeto>/<projeto>_archive/context/*-checklist.md` (FEITO vs EM ABERTO).
+- **Contexto/handoff:** `<projeto>/<projeto>_archive/context/*-checklist.md` **e**
+  `<projeto>/<projeto>_archive/chats/*.md` (FEITO vs EM ABERTO) — os **dois** diretórios.
 - **Plano:** `<projeto>/<projeto>_archive/plan/*.md` (do `/eng-plan`).
-- **ADR:** `assets/ADR.md` e ADRs em `<projeto>/<projeto>_archive/` marcados `proposed` que nunca
-  viraram `accepted`/`rejected`.
+- **ADR:** `<projeto>/<projeto>_archive/decisoes/*.md` marcados `proposed` que nunca viraram
+  `accepted`/`rejected` — o **caminho único da casa**. *(Não confunda com `assets/ADR.md`, que é o
+  TEMPLATE distribuído pela skill, não artefato de projeto: auditar o template era o achado B2c.)*
 - **Qualquer MD** no archive/histórico com linhas `- [ ]` / `- [~]` ou seções "TODO/EM ABERTO".
 
 ## 2. O que se verifica por item

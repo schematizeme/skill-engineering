@@ -45,6 +45,40 @@ cima — aqui isso é vetado.
   em outro provedor, garante que você não perca o acesso caso perca acesso a este email."*
   Sugestão, não obrigação.
 
+### 2.1 Hash de senha — argon2id com parâmetros MÍNIMOS (o número, não só o nome)
+
+Dizer "argon2id" e parar aí não é piso: argon2id **mal parametrizado** é mais fraco que um bcrypt
+bem configurado, e o default de várias libs é justamente o mais fraco. Por isso o número entra
+aqui, na base, e as skills de linguagem **apontam para cá** em vez de recopiar.
+
+**Piso da casa (alinhado às opções recomendadas do OWASP Password Storage / RFC 9106):**
+
+| Parâmetro | Piso | Observação |
+|---|---|---|
+| Algoritmo | **argon2id** | híbrido: resiste a GPU (2i) e a side-channel (2d). Nada de argon2i/argon2d puros. |
+| Memória (`m`) | **≥ 19 MiB** (19456 KiB) | é o que torna o ataque caro; se puder pagar, **46–64 MiB**. Baixar `m` para "ficar rápido" anula o algoritmo. |
+| Iterações (`t`) | **≥ 2** (com `m` ≥ 19 MiB) | `t` sobe quando `m` não pode subir. |
+| Paralelismo (`p`) | **1** | `p` alto ajuda o atacante tanto quanto você; deixe em 1 salvo medição. |
+| Salt | **≥ 16 bytes, CSPRNG, por senha** | nunca global, nunca derivado do identificador. |
+| Saída | **≥ 32 bytes** | |
+| Pepper (opcional) | segredo **fora do banco** (KMS/env), aplicado antes do hash | protege dump de banco sem comprometer o KMS. |
+
+**Regras que acompanham o número:**
+
+- **Meça, não copie.** Calibre para **~0,5–1 s** por hash no hardware de produção do auth
+  (`p=1`), e re-meça quando trocar a máquina. Registre o resultado no ADR do serviço.
+- **O parâmetro viaja com o hash.** Guarde a string codificada completa
+  (`$argon2id$v=19$m=19456,t=2,p=1$<salt>$<hash>`), nunca só o digest: sem isso, subir o custo
+  depois é impossível sem invalidar todo mundo.
+- **Re-hash preguiçoso.** No login bem-sucedido, se o hash guardado usa algoritmo antigo (bcrypt,
+  PBKDF2, scrypt) ou parâmetros abaixo do piso vigente, **re-hasheia com o piso atual** — é a
+  única migração que não pede senha nova ao usuário.
+- **argon2id-only para senha NOVA.** bcrypt, PBKDF2 e scrypt existem só como **legado a migrar**.
+  Se a plataforma realmente não tem argon2id disponível, o fallback é **bcrypt com cost ≥ 12** e
+  vira **ADR com prazo**, não configuração permanente.
+- **Comparação em tempo constante** na verificação, sempre (a lib madura já faz; não reimplemente).
+- **Nunca logar** o hash, o salt, o pepper ou a senha — em nível nenhum.
+
 ## 3. Fatores e níveis de garantia (AAL — NIST 800-63B)
 
 Classificar a **força** de cada fator permite "email sempre disponível" sem abrir mão de

@@ -62,7 +62,7 @@ A casa não tem "a linguagem única"; tem o **rol sancionado** e um **guia de fi
 **Frontend — Node (e só frontend).** **Next.js** principal; **Astro e outros consolidados** permitidos. O server-side do próprio front (route handlers/server actions/BFF) faz parte do frontend (§13.4, §38: segredo só server-side). Isso **não** reabre Node como serviço backend (§3.1).
 
 **MUST**
-- Versão exata em uso fica no Anexo A / `stack-versoes.md` da skill de linguagem.
+- Versão exata em uso fica no **anexo volátil** da skill de linguagem — `schematize-go`, `schematize-rust`, `schematize-elixir`, `schematize-csharp`, `schematize-zig`, `schematize-ruby`, `schematize-node` ou `schematize-web` → `references/stack-versoes.md` —, sempre com data de verificação. Nunca no corpo normativo.
 - Não misturar linguagens dentro do **mesmo bounded context** sem ADR.
 - **Backend novo em linguagem do rol** (Go/Rust/Elixir/C#/Zig/Ruby), **com ADR justificando o fit**. Fora do rol → §3.1 (Node/PHP em saída).
 - **O piso de engenharia é o mesmo em todas** — a linguagem muda o "como", não os pisos de segurança/testes/IAM/ops/archive/DoD.
@@ -140,7 +140,7 @@ Projetos legados onde código já existe sem separação de camadas **podem** ad
 - Toda nova feature/refactor em código tocado segue o layout completo (`domain/`, `application/`, `infrastructure/`, `interface/`) — não introduzir mais código "flat".
 - Ao mover/quebrar arquivo legado, organize já em folders DDD mesmo que internamente alguma classe ainda misture responsabilidades (ex.: service em `application/` ainda chamando SQL direto). Estrutura primeiro, inversão depois.
 - Cada PR que toca arquivo híbrido **deve** mover ao menos um pedaço pra direção certa (ex.: extrair entidade pra `domain/`, mover query pra `infrastructure/repositories/`).
-- ADR registrando o débito e o plano de remoção: `<project>/docs/adr/<n>-ddd-migration-<contexto>.md`.
+- ADR registrando o débito e o plano de remoção: `<projeto>/<projeto>_archive/decisoes/<n>-ddd-migration-<contexto>.md`.
 
 **SHOULD**
 - Manter teste de cobertura por camada (**schematize-qa**) durante a transição — domain começa com 0%, sobe a cada PR.

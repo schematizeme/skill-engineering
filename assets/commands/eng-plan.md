@@ -13,7 +13,7 @@ reversível de 1 arquivo, diga que não precisa de plano extensivo e siga inline
 3. **Pesquisar o desconhecido:** liste as **incógnitas** → cada uma vira **spike time-boxed** ou pergunta. Não planeje sobre suposição não-verificada. Já existe no repo? (consulte o índice, não duplique).
 4. **Decompor no grafo:** unidades **verificáveis**, cada uma com **nó(s)/arquivo:linha + arestas**, **prova** (teste/gate), **dependências**. Monte o **grafo de deps** + **ordem topológica** + **caminho crítico**.
 5. **Risco:** por unidade/decisão — probabilidade × impacto, **reversibilidade**, **mitigação**, **rollback**. Irreversível ganha cuidado, não pergunta à toa.
-6. **Arquitetura & ADR:** decisão que molda estrutura vira **ADR** (`assets/ADR.md`, §27): contexto/opções/decisão/consequência.
+6. **Arquitetura & ADR:** decisão que molda estrutura vira **ADR** (`references/operacao.md` §27; template em `assets/ADR.md`): contexto/opções/decisão/consequência. Grave em `<projeto>_archive/decisoes/`.
 7. **Paralelização:** ≥3 unidades independentes → **plano de fan-out** (`references/orquestracao.md`): contrato por agente, isolamento, gather único.
 8. **Fasear & estimar:** roadmap **F0..Fn** com **DoD por fase** (§35), ordem respeitando as deps.
 

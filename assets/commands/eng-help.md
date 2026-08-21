@@ -26,6 +26,6 @@ instalados em `.claude/commands/`):
 | `/eng-overdev` | Modo desenvolvimento contínuo: força um checklist exaustivo e um Stop hook **rejeita a parada** até tudo `- [x]` e o gate passar. Anti "entreguei uma micro-função e disse que terminei". Roda só quando você chama; inerte fora disso. |
 
 Depois da tabela, diga em uma linha que **Q.A./testes agora são a skill dedicada `schematize-qa`**
-(`/qa-plan`, `/qa-run`, `/qa-help` — o antigo `/eng-qa` foi pra lá) e que **segurança ofensiva é a
+(`/qa-plan`, `/qa-run`, `/qa-help` — o antigo `eng-qa` foi pra lá) e que **segurança ofensiva é a
 `schematize-pentest`**. Diga também que o detalhe normativo está na skill `schematize-engineering`
 (referências em `references/`) e que o site é `skills.schematize.me/go`.
