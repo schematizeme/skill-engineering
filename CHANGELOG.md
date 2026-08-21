@@ -1,5 +1,20 @@
 # Changelog — schematize-engineering
 
+Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
+com versionamento [SemVer](https://semver.org/lang/pt-BR/).
+
+## [0.22.0] — 2026-08-21
+Saneamento do catálogo conforme a vistoria de 2026-08-21.
+
+### Adicionado
+- **`references/iam.md` §5.1 — "As três regras do motor que ninguém escreve"**: **outbox transacional** na escrita de tupla ReBAC (com os dois desastres simétricos nomeados: o convite que existe no banco e não no motor, e a remoção que saiu do banco e **ficou** no motor — privilégio que sobrevive à revogação), **PDP fail-closed** (motor fora do ar = deny; é o que separa indisponibilidade de brecha) e **denylist de `jti` como consulta obrigatória** em todo caminho que aceita token — *um só caminho que pula anula o logout inteiro, e é sempre o que ninguém lembrou: o WebSocket, o job*.
+- **§6 — refresh opaco, CSPRNG, hasheado no store**, com comparação em tempo constante; **§9 — comparação em tempo constante na negação deceptiva** (*se ela responde mais rápido porque pulou a verificação, o tempo entrega o acerto e a técnica vira o oráculo que existe para negar*); **CSPRNG obrigatório** como transversal; e ***"framework de auth pronto ≠ IAM da casa"*** antes da §7.
+- **`references/linguagens.md` §2.1 — Python**: sancionado como **ferramenta** (dados/ML, automação, ferramental) e **VETADO para API/serviço de produto novo**, exatamente como Node, com a forma da exceção (servir modelo atrás de um serviço do rol).
+
+### Mudado
+- `assets/hooks/overdev-stop.sh` — conta as **três classes** do checklist, lê `state.json` como canônico (`state` KEY=VALUE por compat) e **falha ruidosamente** quando há CHECKLIST sem estado. Ganhou `# strict-ok:` explicando por que ele **não pode** ter `set -e`: abortar vira "hook não decidiu", que o harness trata como **permitir a parada** — ou seja, desligaria a trava do overdev em silêncio.
+- `references/arquitetura.md` §6 passou a dizer que **`§6` é o apelido de "pisos de código"** nos ~9 lugares que o citam, e que manter o apelido é deliberado.
+
 ## [0.21.0] — 2026-08-20
 Piso novo (travado pelo Lucas, com ADR): efeito externo NUNCA sai de não-produção. Origem: um laço de teste disparou **>5.000 e-mails reais** para endereços sintéticos — hard bounce/spam trap em massa, reputação de IP e domínio queimada, custo real, utilidade zero. ADR-0004 no archive.
 ### Adicionado
@@ -39,9 +54,6 @@ Archive muda de convenção: sai de irmão do projeto e vira parte de DENTRO do 
 - **§28 — nova natureza:** o `_archive/` agora é um **repositório git PRÓPRIO, PRIVADO e obrigatório** (como os repos dos microserviços), cuja função é a **evolução do projeto DOCUMENTADA** — `git init` + remote privado dedicado + versionado por marco (commit a cada decisão/plano/handoff/fechamento; o `git log` conta a evolução). Fica explícito: `_archive/` = durável, NÃO gitignored; `.schematize/` = operacional volátil, gitignored.
 - §28.0 referencia a skill **schematize-archive** (`/archive-init`, `/archive-todos`) como a execução detalhada da disciplina.
 
-
-Formato: [Keep a Changelog]; versionamento: SemVer.
-
 ## [0.17.0] — 2026-08-18
 IAM restritivo — o "só está pronto quando está pronto" + correção da contradição do muro pré-login.
 ### Adicionado
@@ -50,9 +62,6 @@ IAM restritivo — o "só está pronto quando está pronto" + correção da cont
 - **`/eng-iam` virou RESTRITIVO**: deriva o checklist exaustivo em `.schematize/overdev/CHECKLIST.md` e roda sob o overdev (Stop-hook trava com item aberto); gate do pentest é condição de conclusão, não sugestão.
 - **Corrigida a contradição normativa GRAVE**: o `/eng-iam` mandava "2º fator forte obrigatório antes do acesso pleno" e "força 2º fator no 1º login" — o exato **muro pré-login / deadlock de bootstrap** que o `iam.md` VETA. Agora: senha+Email OTP = 2FA baseline; fator forte é nudge + step-up just-in-time, nunca muro. (mesma correção propagada às skills de linguagem).
 - `references/iam.md`: o checklist-resumo aponta pro exaustivo `iam-checklist.md`.
-
-
-Formato: [Keep a Changelog]; versionamento: SemVer.
 
 ## [0.16.0] — 2026-08-18
 Layout operacional do projeto muda de `.overdev/` para **`.schematize/`** (com `overdev/` e `grafos/`) e a §39 vira um **grafo GLOBAL de dois níveis**.
