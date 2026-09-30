@@ -25,8 +25,8 @@ plano raso, retrabalho e "reabrir o que já foi combinado". A Fase 0 é **obriga
 |---|---|---|---|
 | 0.1 | `DECISOES.md` | as decisões **já acordadas** no contexto, em ADR-lite: *decisão · motivo · alternativa descartada · origem*. O que ficou ambíguo **não vira decisão**: vira `- [~]` on-hold | `.schematize/overdev/` + espelho no archive |
 | 0.2 | grafo carregado | o **MAPA/índice §39** lido (`/eng-index`); cada item do plano aponta o(s) **nó** que toca e as **arestas** afetadas. Sem índice, **gerá-lo é o 1º item** | `<projeto>_archive/index/` |
-| 0.3 | `PLAN.md` **pesado** | escopo (entra / **NÃO** entra), decomposição em itens **verificáveis** (nó do grafo + **prova** + dependências + risco), ordem topológica, paralelismo (≥3 unidades independentes → `/eng-orchestrate`), riscos, DoD (§35) | `.schematize/overdev/` |
-| 0.4 | `CHECKLIST.md` | **derivado do plano**, exaustivo por contagem, 1 item por linha, cada um com **como provar**, nas 3 classes `- [ ]` · `- [H ]` · `- [~]` | `.schematize/overdev/` |
+| 0.3 | `PLAN.md` **pesado** | escopo (entra / **NÃO** entra), decomposição em itens **verificáveis** e do tamanho de **uma micro-task de Sonnet** (nó do grafo + **prova** + dependências + risco + executor `[sonnet]`/`[opus: <motivo>]`), ordem topológica, paralelismo (≥3 unidades independentes → `/eng-orchestrate`), riscos, DoD (§35) | `.schematize/overdev/` |
+| 0.4 | `CHECKLIST.md` | **derivado do plano**, exaustivo por contagem, 1 item por linha, cada um com **como provar**, nas 3 classes `- [ ]` · `- [H ]` · `- [~]`. Itens **dimensionados como micro-task de Sonnet** (§2 / `orquestracao.md` §9.2), cada um com a tag de executor `[sonnet]` (default) ou `[opus: <motivo>]` | `.schematize/overdev/` |
 
 **Gate da Fase 0 (a linha 0.4 da tabela):** só entra no laço (§2) com os quatro prontos. Começar a tickar sem a fundação é a
 macaquice que a Fase 0 existe para matar.
@@ -47,9 +47,22 @@ dela, **ela manda** no *como*; aqui manda o *o quê* (o gate acima).
 
 ## 2. O laço (sem parar) — começa DEPOIS da Fase 0
 Fechada a fundação (§0), tickeia **item a item**. Enquanto houver item aberto: pega o
-**próximo `- [ ]`** → implementa **de verdade** →
-**verifica** (roda o teste/gate do item) → só então marca `- [x]` → repete. Do critério
-mais barato ao mais caro. Unidades independentes (≥3) vão pra **fan-out de subagents**
+**próximo `- [ ]`** → **escreve o brief (micro-task)** → **despacha a um subagent** (`sonnet`) que
+implementa **de verdade** → **revisa** (diff + roda o teste/gate do item) → se falhou, **pede a
+correção ao mesmo subagent** com o achado concreto → só então marca `- [x]` → repete. Do critério
+mais barato ao mais caro.
+
+**Orquestrador não desenvolve; subagent barato executa** (`references/orquestracao.md` §9):
+- **Cada item é executado por subagent, nunca pelo principal.** O principal (modelo padrão da
+  sessão, o que fala com o humano) só pega o item, escreve o brief, despacha, revisa com gate,
+  pede correção e tickeia. Só corrige com a própria mão a exceção estreita da §9.1 (1–2 linhas
+  de integração), registrada.
+- **Escada de modelo:** `sonnet` por padrão → falhou, o **mesmo subagent corrige** (até 2
+  rodadas) → re-decompõe o item → só então **`opus`**, com **motivo da escalada** registrado.
+  Esgotou Opus (2×) → `park` + `- [~]` (§4).
+- Cada item do CHECKLIST carrega a tag de executor: **`[sonnet]`** (default) ou
+  **`[opus: <motivo>]`**. Escalada e rodadas de correção ficam no checkpoint/archive do overdev
+  (`<projeto>_archive/overdev/`, e `orchestration/` quando há fan-out). Unidades independentes (≥3) vão pra **fan-out de subagents**
 (`references/orquestracao.md`) — paralelismo acelera, não autoriza fechar item sem prova.
 
 ## 3. Continuidade à prova de parada (o mecanismo)
@@ -77,6 +90,9 @@ Ao topar uma dúvida (mesmo que pareça bloqueante):
 2. **Marque aquele item como `- [~]` (on-hold)** — `schematize overdev park "<item>"
    "<pergunta>"` faz os dois (registra + marca).
 3. **SIGA para os outros itens.** On-hold **não** bloqueia o fim do run.
+
+**Escalar para Opus não é pergunta** (§2): o principal sobe o modelo do subagent sozinho, com o motivo
+registrado, sem parar nem consultar o humano. Só **esgotou Opus** (falhou 2×) vira `park`.
 
 Assuma um **default razoável e documente-o** em vez de perguntar, sempre que o custo de
 errar for reversível. Só parkeia o que for de fato irreversível/ambíguo demais.

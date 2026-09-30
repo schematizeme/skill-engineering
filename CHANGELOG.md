@@ -3,6 +3,19 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.23.0] — 2026-09-30
+Regra nova (pedido do dono, por **custo**): o orquestrador em modelo padrão **não desenvolve**; ação onerosa vira micro-tasks baratas; **Sonnet é o default** dos subagents e **Opus só após falha**.
+
+### Adicionado
+- **`references/orquestracao.md` §9 — "Papéis e escada de modelo (custo)"** (9.1 papéis, 9.2 ação onerosa → micro-funções, 9.3 escada sonnet→opus, 9.4 supervisão e revisão, 9.5 relação com tempo > tokens); blockquote inicial, §4.5, §4.6, §7 (tabela de status ganha colunas **modelo** e **rodadas de correção**) e "Regra de bolso" ajustados.
+- **`references/overdev.md`** §0 (item 0.3/0.4 dimensionado como micro-task de Sonnet, tag `[sonnet]`/`[opus: <motivo>]`), §2 (cada item por subagent; principal escreve brief, revisa, pede correção) e §4 (escalar para Opus não é pergunta; esgotou Opus → `park`).
+- **`assets/commands/eng-overdev.md`** (passos 0.3/0.4 e "Entre no laço") e **`eng-orchestrate.md`** (executor/modelo por unidade, escada de correção, principal só revisa).
+- **`assets/CLAUDE.md` piso 19** — *Orquestrador não desenvolve; subagent barato executa*; piso 13 remete a ele.
+- **`SKILL.md`**: bullet nos pisos, linhas de `/eng-orchestrate` e de `orquestracao.md`, `description`.
+
+### Mantido (piso inalterado)
+- **Tempo do usuário > tokens** continua; fan-out **8 por onda / teto 25**; **checkpoint em MD** à prova de crash. A §9 escolhe *quem executa* (o mais barato que resolve); não muda *quando paralelizar*.
+
 ## [0.22.0] — 2026-08-21
 Saneamento do catálogo conforme a vistoria de 2026-08-21.
 

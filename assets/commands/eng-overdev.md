@@ -21,13 +21,15 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
    aponta nó/`arquivo:linha` e arestas afetadas). Sem index? gerá-lo é o **1º item** do checklist.
 
 0.3 **Planejamento PESADO** → `.schematize/overdev/PLAN.md` (+ archive): escopo (entra/NÃO entra),
-   decomposição em itens **verificáveis** (cada um: nó do grafo + prova + dependências + risco),
+   decomposição em itens **verificáveis** e do tamanho de **uma micro-task de Sonnet** (cada um: nó do
+   grafo + prova + dependências + risco + executor `[sonnet]`/`[opus: <motivo>]`),
    **ordem** topológica, **paralelismo** (≥3 independentes → `/eng-orchestrate`), **mapa
    decisão→item**, riscos, DoD (§35) + archive (§28).
 
 0.4 **Derive o CHECKLIST do plano** → `.schematize/overdev/CHECKLIST.md` (+ espelho `OBJETIVO.md`).
    Exaustivo **por contagem**, um item por linha (`- [ ]`), cada um pequeno e com como provar
-   (teste/comando/gate). Se o usuário já tem checklist, **incorpore inteiro, sem resumir**.
+   (teste/comando/gate) e **tag de executor** (`[sonnet]` default; `[opus: <motivo>]` só após
+   escalada — `orquestracao.md` §9). Se o usuário já tem checklist, **incorpore inteiro, sem resumir**.
    Cubra: implementação, testes, edge cases, erro/loading/vazio, doc-comment + índice/MAPA
    (§39), DoD (§35), archive (§28). Checklist magro = "terminei" precoce.
 
@@ -49,7 +51,9 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
 2. **Confirme os hooks:** `schematize overdev enable` registra Stop + PreToolUse no
    `settings.json` (uma vez; inerte sem run). `schematize overdev status` mostra o estado.
 3. **Entre no laço** (`references/overdev.md` §2) — **só com a Fase 0 fechada** (os 4 artefatos da tabela do §0): próximo
-   `- [ ]` → implementa → **verifica (roda o gate)** → marca `- [x]` → repete. ≥3 unidades
+   `- [ ]` → **escreve o brief e despacha a um subagent `sonnet`** (o principal NÃO desenvolve) →
+   **revisa (diff + roda o gate)** → falhou? **pede correção ao mesmo subagent** (até 2 rodadas →
+   re-decompõe → só então `opus`, com motivo registrado) → marca `- [x]` → repete. ≥3 unidades
    independentes → **fan-out** (`/eng-orchestrate`). **Não pare, não anuncie "pronto", não
    entregue micro-função como se fosse o todo.**
 
@@ -57,7 +61,8 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
 **VETADO usar `AskUserQuestion` (pool bloqueante) em overdev** — o hook `guard` bloqueia.
 Topou dúvida? **parkeia e segue**: `schematize overdev park "<item>" "<pergunta>"` (registra
 em `./PERGUNTAS-OVERDEV.txt` na base do projeto **e** marca o item como `- [~]` on-hold), e
-continua os outros. Prefira **assumir um default razoável e documentá-lo** a perguntar,
+continua os outros. **Escalar para Opus não é pergunta** — sobe o modelo do subagent com motivo
+registrado; só **esgotou Opus** vira `park`. Prefira **assumir um default razoável e documentá-lo** a perguntar,
 quando o erro for reversível.
 
 ## Como TERMINAR (as únicas saídas legítimas)

@@ -1,5 +1,7 @@
 # Orquestração & paralelização — tempo do usuário acima de tokens
 
+> **Papéis e modelo (§9):** o orquestrador (agent principal) **não desenvolve** — planeja, despacha e revisa; quem executa é subagent em **`sonnet` por padrão**, com escada de correção até `opus` só após falha.
+>
 > Piso de **execução**: quando uma tarefa se divide em partes independentes, o padrão da casa é **decompor em mini-tasks e paralelizar com múltiplos subagents**, não fazer serial. O gargalo que otimizamos é o **relógio do usuário (wall-clock)**, não o orçamento de tokens. Preferimos gastar mais tokens e entregar em minutos a economizar tokens e levar horas. O que é vetado é o oposto: gastar 10× o tempo resolvendo serialmente algo que paralelizava.
 
 ## 1. Princípio (o trade-off explícito)
@@ -26,8 +28,8 @@
 2. **Particione por independência** (§2). Liste as unidades; confirme que não colidem.
 3. **Brief autossuficiente por agent.** O subagent **não vê a conversa** — mande contexto necessário, caminhos absolutos, o contrato a seguir, e o critério de pronto. Um brief pobre gera retrabalho (o pior desperdício de tempo).
 4. **Isole escritas.** Se agents tocam o mesmo repo: `isolation: "worktree"` (cada um numa cópia git isolada) **ou** particione por diretório/arquivo com fronteiras que não se cruzam. Nunca deixe dois agents escrevendo o mesmo arquivo.
-5. **Orquestrador faz o gather.** Você (o principal) junta os resultados, **integra e verifica uma vez** (build/test/publish). Paralelize também a **verificação** quando ela se divide (curls independentes, suites por serviço).
-6. **Continue, não recrie.** Pra iterar num agent que já tem o contexto, use continuação (SendMessage) em vez de abrir outro frio.
+5. **Orquestrador faz o gather — e revisa, não desenvolve (§9).** Você (o principal) junta os resultados, **revisa cada entrega** (diff + gate), **integra e verifica uma vez** (build/test/publish); o que estiver errado volta ao subagent, não vira código seu. Paralelize também a **verificação** quando ela se divide (curls independentes, suites por serviço).
+6. **Continue, não recrie.** Pra iterar num agent que já tem o contexto, use continuação (SendMessage) em vez de abrir outro frio. **A continuação é o 1º passo da correção** (§9.3): falhou no gate, devolve ao mesmo subagent com o erro concreto antes de trocar de modelo.
 
 ## 5. Padrões de fan-out comuns
 
@@ -51,10 +53,10 @@
 
 Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda morre no meio. **O estado nunca vive só nos eventos.** A verdade do fan-out mora num **MD de checkpoint** no archive, escrito **antes** de qualquer agent rodar e atualizado a cada onda — assim, se tudo cair, você **retoma lendo o MD**, sem refazer o que já ficou pronto.
 
-1. **Antes de disparar a onda 1**, grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** (`PENDENTE / EM ANDAMENTO / FEITO / FALHOU`) por unidade, com o caminho do resultado de cada uma.
+1. **Antes de disparar a onda 1**, grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
 2. **Cada subagent grava o próprio resultado** num `.md` no archive (não só retorna pelo evento) — `…/orchestration/<tarefa>/<unidade>.md` com o que fez, arquivos tocados e o pronto/erro. Resultado que só existe no evento **não existe**.
 3. **A cada onda que fecha**, o orquestrador **atualiza a tabela de status** no MD de checkpoint. O MD é sempre o retrato atual.
-4. **Retomada:** se a sessão cai, o próximo passo é **ler o checkpoint** e disparar só as unidades `PENDENTE/FALHOU` — nunca recomeçar do zero. Sem retry infinito; unidade que falha 2× vira gate humano.
+4. **Retomada:** se a sessão cai, o próximo passo é **ler o checkpoint** e disparar só as unidades `PENDENTE/FALHOU` — nunca recomeçar do zero. Sem retry infinito; unidade que esgota a escada de modelo (§9.3) vira gate humano.
 
 > Isto é o mesmo princípio do handoff (§34.1) e do archive (§28): **MD como memória durável**. Se a resposta a "e se travar agora?" não for "abro o MD e continuo", o fan-out está sem rede.
 
@@ -64,4 +66,33 @@ Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda 
 - **Archive.** Plano, checkpoint e resultado consolidado entram no archive (§28) — em `<projeto>/<projeto>_archive/orchestration/`, nunca no root — como qualquer entrega.
 - **Contexto.** Ondas longas seguem a gestão de contexto (`references/contexto-claude-code.md`): handoff antes de compactar.
 
-> Regra de bolso: **se dá pra dividir sem colidir, divida e paralelize.** O usuário paga o relógio, não o token. Mas paralelizar exige o mesmo rigor de sempre — contrato fixado, escrita isolada, **checkpoint em MD**, verificação única. Fan-out sem plano (ou sem checkpoint durável) é desperdício rápido, não entrega rápida.
+> Regra de bolso: **se dá pra dividir sem colidir, divida e paralelize — em subagents `sonnet`; o orquestrador não desenvolve, revisa.** O usuário paga o relógio, não o token; entre executores que entregam no mesmo tempo, o mais barato vence (§9). Mas paralelizar exige o mesmo rigor de sempre — contrato fixado, escrita isolada, **checkpoint em MD**, verificação única. Fan-out sem plano (ou sem checkpoint durável) é desperdício rápido, não entrega rápida.
+
+## 9. Papéis e escada de modelo (custo)
+
+> Piso de **custo**: **orquestrador não desenvolve; subagent barato executa.** A §1 escolhe *paralelizar pelo relógio*; esta seção escolhe *quem executa e com qual modelo*. Vale mesmo para <3 unidades.
+
+### 9.1 Papéis
+- **Agent principal (orquestrador)** = o que conversa com o humano. Roda no **modelo padrão da sessão** (não se força modelo nele). **NÃO desenvolve**: não escreve código de produto, não edita arquivo de entrega, não roda a implementação. Faz só: entender, **planejar/decompor**, escrever o **brief/contrato**, **despachar**, **supervisionar**, **revisar** (ler diff, rodar gate/teste, conferir contra o critério de pronto), **integrar** e falar com o humano.
+- **Subagent (executor)** = faz a task. Brief autossuficiente (§4, passo 3), escopo fechado, critério de pronto, grava resultado no archive (§7).
+- **Exceção estreita e declarada:** correção **trivial** de integração (1–2 linhas, ex.: conflito de import entre duas entregas) quando despachar custaria mais que fazer — registrada no checkpoint como "correção do orquestrador". Nunca vira hábito; na dúvida, despacha.
+
+### 9.2 Ação onerosa → micro-funções baratas
+- **Onerosa** = qualquer task que leria/escreveria muitos arquivos, geraria muito código, varreria a base, ou que um modelo caro levaria vários passos para fechar. Antes de executar, **decompor em micro-tasks** (idealmente = micro-funções da §39: uma função/unidade por task, com assinatura, doc-comment e teste definidos no brief) pequenas o bastante para um **modelo mais barato** acertar de primeira.
+- Isto vale **mesmo quando <3 unidades**: a regra de fan-out (§2) decide *paralelizar ou não*; a §9 decide *quem executa* — sempre um subagent. Unidades acopladas rodam **em série** por subagents, não inline no principal.
+- **Micro-task boa:** entrada/saída explícitas, arquivos-alvo nomeados, contrato fixado, prova (teste/comando) definida. Se o Sonnet precisa "decidir arquitetura", a task não está micro o bastante — o desenho é do orquestrador.
+
+### 9.3 Escada de modelo (default Sonnet)
+1. **Default: `sonnet`** em todo subagent (no Claude Code: `model: "sonnet"` no Agent tool; em workflow, `model: 'sonnet'`). Explore/pesquisa simples podem ir em `haiku` quando é só localizar.
+2. **Falhou → devolve ao MESMO subagent primeiro** (SendMessage/continuação, com o erro concreto do gate/review e o que mudar). Até **2 rodadas** de correção no Sonnet.
+3. **Ainda falhou → re-decompor** (task grande demais? brief pobre?) e redespachar em Sonnet.
+4. **Só então sobe para `opus`**, registrando no checkpoint o **motivo da escalada** (o que o Sonnet não conseguiu). Opus é exceção justificada, não default.
+5. **Falhou em Opus 2× → gate humano** (no overdev: `park` + `- [~]`, não pergunta bloqueante).
+
+### 9.4 Supervisão e revisão (o principal é o revisor)
+- Toda entrega de subagent é **revisada pelo principal** antes de contar como feita: ler o diff, rodar o gate/teste do item, conferir o critério de pronto e os pisos (DoD §35, anti-padrões §37).
+- Achou problema → **pede ao subagent que corrija** (com o achado concreto). O principal **só corrige com a própria mão se necessário** (exceção 9.1) — nunca reescreve por preferência.
+- O checkpoint (§7) ganha colunas **modelo** (`sonnet`/`opus`) e **rodadas de correção** por unidade.
+
+### 9.5 Relação com §1 (tempo > tokens)
+Não conflita: paralelizar continua sendo o padrão para o relógio; a §9 escolhe o **executor mais barato que resolve**. Tempo do usuário > tokens; entre dois executores que entregam no mesmo tempo, o mais barato vence.

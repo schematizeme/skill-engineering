@@ -18,6 +18,8 @@ Se o desenho não está fechado, decida agora: interfaces/nomes, formato de saí
 
 ## 3. Monte o plano de fan-out (MD)
 
+- **Papéis (§9):** você (orquestrador) **só planeja, despacha e revisa — não desenvolve**. Toda ação onerosa vira **micro-tasks** para subagent barato, mesmo com <3 unidades (o fan-out decide *paralelizar*; a §9 decide *quem executa*).
+- **Mostre no plano, por unidade, o executor/modelo:** `sonnet` por padrão; `opus` só com motivo. E a **escada de correção**: falhou → mesmo subagent corrige (até 2 rodadas) → re-decompõe → só então `opus` (motivo no checkpoint) → falhou 2× em Opus = gate humano.
 - **Ondas de até 8** subagents (teto global 25; acima de 8, ondas sequenciais de 8).
 - Por agent: **brief autossuficiente** (contexto + caminhos absolutos + contrato + critério de pronto — ele começa frio, não vê esta conversa).
 - **Isolamento de escrita:** se tocam o mesmo repo, `isolation: "worktree"` ou partição por diretório/arquivo sem cruzar.
@@ -26,11 +28,11 @@ Se o desenho não está fechado, decida agora: interfaces/nomes, formato de saí
 
 ## 4. Grave o checkpoint no archive — ANTES de disparar (à prova de crash)
 
-Antes de qualquer agent rodar, escreva **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`** (`references/orquestracao.md` §7): o contrato, as unidades e uma **tabela de status** (`PENDENTE/EM ANDAMENTO/FEITO/FALHOU`) com o caminho do resultado de cada uma. **Instrua cada subagent a gravar o próprio resultado** em `…/orchestration/<tarefa>/<unidade>.md` (não só retornar pelo evento — evento é efêmero). O estado nunca vive só no chat: se travar, retoma-se **lendo este MD**.
+Antes de qualquer agent rodar, escreva **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`** (`references/orquestracao.md` §7): o contrato, as unidades e uma **tabela de status** (`PENDENTE/EM ANDAMENTO/FEITO/FALHOU`) com **modelo** (`sonnet`/`opus`), **rodadas de correção** e o caminho do resultado de cada uma. **Instrua cada subagent a gravar o próprio resultado** em `…/orchestration/<tarefa>/<unidade>.md` (não só retornar pelo evento — evento é efêmero). O estado nunca vive só no chat: se travar, retoma-se **lendo este MD**.
 
 ## 5. Peça aprovação
 
-Mostre o plano (unidades × agents, ondas, custo aproximado, gate). **Só após "ok"** dispare a onda 1. **A cada onda que fecha, atualize a tabela de status** no checkpoint. Retomada = ler o checkpoint e rodar só `PENDENTE/FALHOU` (sem retry infinito; falhou 2× → gate humano). Achado crítico pausa e reporta.
+Mostre o plano (unidades × agents, ondas, custo aproximado, gate). **Só após "ok"** dispare a onda 1. **A cada onda que fecha, atualize a tabela de status** no checkpoint. Retomada = ler o checkpoint e rodar só `PENDENTE/FALHOU` (sem retry infinito; falhou 2× → gate humano). **Cada entrega é revisada por você (diff + gate) e, se falhar, devolvida ao subagent — você não corrige com a própria mão** (exceto a exceção estreita da §9.1). Achado crítico pausa e reporta.
 
 ## 6. Consolide
 
