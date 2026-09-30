@@ -33,6 +33,8 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
    Cubra: implementação, testes, edge cases, erro/loading/vazio, doc-comment + índice/MAPA
    (§39), DoD (§35), archive (§28). Checklist magro = "terminei" precoce.
 
+**Guard de papéis:** o bloqueio de `Edit`/`Write` do agent principal durante o run é especificação **pendente no CLI** — ver `references/overdev.md` §3 ("Guard de papéis"). Até existir, é disciplina sua: o principal despacha e revisa, não edita.
+
 **Só depois da Fase 0:** (a cada item fechado no laço, faça a varredura de ociosos — `orquestracao.md` §9.6: idle com pendência → reuse; depende de outro → mate + enfileire com gatilho de dependência; terminou → mate.)
 
 1. **Ative o run** com o CLI (motor Rust — ver `references/overdev.md` §7):

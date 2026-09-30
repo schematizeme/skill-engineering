@@ -3,6 +3,20 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.25.0] — 2026-09-30
+Ajuste de aplicabilidade: o checkpoint em MD antes de toda onda era pesado demais para tarefas pequenas e vinha sendo pulado na prática (2 rodadas de 6 e 2 agents); regra que não se cumpre vira ruído. Também: a descrição do frontmatter estava no teto de 1024 e enumerava pisos em vez de gatilhos; e os papéis do overdev eram só texto, sem enforcement.
+
+### Adicionado
+- **`assets/herdados/orquestracao.md`** — fonte única do piso de orquestração herdado pelas 19 derivadas (variantes `longo`/`curto`/`bullet`), sincronizada por `tools/sync-herdados.mjs` do catálogo (checado no CI). Mudar a regra agora é editar este arquivo e rodar o sync.
+- **`references/overdev.md` §3 — "Guard de papéis (a implementar no motor `schematize`)"**: especificação (marcada PENDENTE no CLI) de hook `PreToolUse` que bloqueia `Edit`/`Write`/`NotebookEdit` do agent principal em run ativo (exceção: `.schematize/overdev/*` e archive), hook `SubagentStop`, e taxa de escalada `[sonnet]`/`[opus]` no `schematize overdev status`. Ponteiro em **`eng-overdev.md`**.
+
+### Alterado
+- **`SKILL.md`**: descrição reescrita (≤ 850 caracteres), focada em gatilhos e escopo; pisos reduzidos a uma frase.
+- **`references/orquestracao.md` §7** e **`eng-orchestrate.md`**: checkpoint em MD **proporcional** — obrigatório com ≥ 5 unidades, OU > 15 min estimados, OU qualquer overdev, OU publicação/efeito irreversível no meio; abaixo, tabela de status no relato final e regra de retomada não se aplica.
+
+### Mantido (piso inalterado)
+- Orquestrador não desenvolve; sonnet default, opus só após escada; fan-out 8/onda, teto 25; sem frota ociosa; tempo do usuário > tokens; pisos de segurança/archive/efeito externo.
+
 ## [0.24.0] — 2026-09-30
 Regra nova (pedido do dono): agents idle poluem a tela e seguram recurso — o orquestrador não mantém frota ociosa; idle com pendência volta a trabalhar, dependente de outro agent é morto e enfileirado com gatilho, concluído é morto.
 

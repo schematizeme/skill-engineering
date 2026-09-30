@@ -49,11 +49,13 @@
 - **Ordem dura** (`build → deploy`, migração antes de código que a usa).
 - Quando o **custo de merge/coordenação > tempo economizado** (2 unidades pequenas).
 
-## 7. Permanência — o MD é o backup, à prova de crash (MUST)
+## 7. Permanência — o MD é o backup, à prova de crash (MUST, proporcional)
+
+**Limiar (checkpoint em MD obrigatório se QUALQUER um):** ≥ 5 unidades · duração estimada > 15 min · qualquer overdev · publicação/efeito irreversível no meio do fan-out. **Abaixo do limiar** basta a **tabela de status no relato final** ao humano (unidades, modelo, rodadas, resultado) — e a regra de retomada (item 4) **não se aplica**: refazer é mais barato que registrar. Checkpoint pulado **acima** do limiar é violação; em dúvida, grave.
 
 Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda morre no meio. **O estado nunca vive só nos eventos.** A verdade do fan-out mora num **MD de checkpoint** no archive, escrito **antes** de qualquer agent rodar e atualizado a cada onda — assim, se tudo cair, você **retoma lendo o MD**, sem refazer o que já ficou pronto.
 
-1. **Antes de disparar a onda 1**, grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU / BLOQUEADA (depende de X)) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
+1. **Antes de disparar a onda 1** (acima do limiar), grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU / BLOQUEADA (depende de X)) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
 2. **Cada subagent grava o próprio resultado** num `.md` no archive (não só retorna pelo evento) — `…/orchestration/<tarefa>/<unidade>.md` com o que fez, arquivos tocados e o pronto/erro. Resultado que só existe no evento **não existe**.
 3. **A cada onda que fecha**, o orquestrador **atualiza a tabela de status** no MD de checkpoint. O MD é sempre o retrato atual. Em seguida faça a **varredura de ociosos** (§9.6): nenhum agent fica parado esperando.
 4. **Retomada:** se a sessão cai, o próximo passo é **ler o checkpoint** e disparar só as unidades `PENDENTE/FALHOU` — nunca recomeçar do zero. Sem retry infinito; unidade que esgota a escada de modelo (§9.3) vira gate humano.

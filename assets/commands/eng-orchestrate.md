@@ -26,9 +26,9 @@ Se o desenho não está fechado, decida agora: interfaces/nomes, formato de saí
 - Marque passos **destrutivos/arriscados** com **gate humano**.
 - Defina o passo de **gather**: como você (orquestrador) junta, integra e **verifica uma vez** (build/test/publish), paralelizando a verificação quando dá.
 
-## 4. Grave o checkpoint no archive — ANTES de disparar (à prova de crash)
+## 4. Grave o checkpoint no archive — ANTES de disparar (à prova de crash, proporcional)
 
-Antes de qualquer agent rodar, escreva **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`** (`references/orquestracao.md` §7): o contrato, as unidades e uma **tabela de status** (`PENDENTE/EM ANDAMENTO/FEITO/FALHOU`) com **modelo** (`sonnet`/`opus`), **rodadas de correção** e o caminho do resultado de cada uma. **Instrua cada subagent a gravar o próprio resultado** em `…/orchestration/<tarefa>/<unidade>.md` (não só retornar pelo evento — evento é efêmero). O estado nunca vive só no chat: se travar, retoma-se **lendo este MD**.
+**Obrigatório se ≥ 5 unidades, OU duração estimada > 15 min, OU qualquer overdev, OU publicação/efeito irreversível no meio** (`orquestracao.md` §7). Abaixo disso basta a tabela de status (unidades, modelo, rodadas, resultado) no relato final; a regra de retomada não se aplica — refazer é mais barato que registrar. Acima do limiar, antes de qualquer agent rodar, escreva **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`** (`references/orquestracao.md` §7): o contrato, as unidades e uma **tabela de status** (`PENDENTE/EM ANDAMENTO/FEITO/FALHOU`) com **modelo** (`sonnet`/`opus`), **rodadas de correção** e o caminho do resultado de cada uma. **Instrua cada subagent a gravar o próprio resultado** em `…/orchestration/<tarefa>/<unidade>.md` (não só retornar pelo evento — evento é efêmero). O estado nunca vive só no chat: se travar, retoma-se **lendo este MD**.
 
 ## 5. Peça aprovação
 

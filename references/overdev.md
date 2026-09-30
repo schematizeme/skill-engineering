@@ -80,6 +80,13 @@ mais barato ao mais caro.
   `/eng-overdev resume` sobrevive a travada/compactação — o Stop hook cobre a sessão viva;
   o cron cobre o "a Anthropic travou". Opcional, ligado a pedido.
 
+### Guard de papéis (a implementar no motor `schematize`) — ESPECIFICAÇÃO, PENDENTE NO CLI
+> **Não existe ainda.** Hoje "o principal não desenvolve" (`orquestracao.md` §9.1) e "sem frota ociosa" (§9.6) são só texto normativo; esta subseção é o contrato que o CLI deve cumprir.
+- **Hook `PreToolUse`** do motor, ativo só com run overdev ativo (`mode=active`): **bloqueia `Edit`/`Write`/`NotebookEdit` vindos do agent principal**. Subagents ficam liberados — o hook distingue pelo contexto do agent (payload do hook). **Exceção declarada:** arquivos de control-plane `.schematize/overdev/*` e o archive do run (`<projeto>/<projeto>_archive/…`).
+- **Mensagem de bloqueio acionável:** "Overdev ativo: o agent principal não edita código. Despache um subagent sonnet com o brief (escopo, critério de pronto, onde gravar o resultado)." Cada bloqueio é registrado no archive do run.
+- **Hook `SubagentStop`:** registra a conclusão (unidade, modelo, resultado) e injeta o lembrete da varredura de ociosos (`orquestracao.md` §9.6).
+- **`schematize overdev status`:** passa a contar as tags `[sonnet]` / `[opus: motivo]` do CHECKLIST e mostrar a **taxa de escalada** (opus ÷ total); taxa alta = brief ruim ou decomposição grossa, investigar.
+
 ## 4. NÃO trave pra perguntar — parkeia e segue (regra central)
 A ideia do overdev é **por pra rodar e sair** (comer/dormir/viver). Então, **VETADO parar
 pra perguntar com pool bloqueante (`AskUserQuestion`) enquanto em overdev** — o hook
