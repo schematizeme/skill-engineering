@@ -3,6 +3,18 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.24.0] — 2026-09-30
+Regra nova (pedido do dono): agents idle poluem a tela e seguram recurso — o orquestrador não mantém frota ociosa; idle com pendência volta a trabalhar, dependente de outro agent é morto e enfileirado com gatilho, concluído é morto.
+
+### Adicionado
+- **`references/orquestracao.md` §9.6 — "Sem frota ociosa (ciclo de vida do subagent)"** (varredura de ociosos em 3 casos); §7 ganha o status `BLOQUEADA (depende de X)` e a varredura a cada onda que fecha.
+- **`references/overdev.md`** §2: varredura de ociosos a cada item fechado.
+- **`assets/commands/eng-orchestrate.md`** e **`eng-overdev.md`**: linha da varredura.
+- **`assets/CLAUDE.md` piso 19** e bullet correspondente no **`SKILL.md`**: frase-resumo "Sem frota ociosa".
+
+### Mantido (piso inalterado)
+- Tempo do usuário > tokens; fan-out 8 por onda / teto 25; checkpoint em MD; escada sonnet→opus; orquestrador não desenvolve. A §9.6 só governa o ciclo de vida dos agents, não *quando* paralelizar.
+
 ## [0.23.0] — 2026-09-30
 Regra nova (pedido do dono, por **custo**): o orquestrador em modelo padrão **não desenvolve**; ação onerosa vira micro-tasks baratas; **Sonnet é o default** dos subagents e **Opus só após falha**.
 

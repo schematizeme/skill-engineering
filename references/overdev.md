@@ -65,6 +65,8 @@ mais barato ao mais caro.
   (`<projeto>_archive/overdev/`, e `orchestration/` quando há fan-out). Unidades independentes (≥3) vão pra **fan-out de subagents**
 (`references/orquestracao.md`) — paralelismo acelera, não autoriza fechar item sem prova.
 
+**A cada item fechado, varredura de ociosos** (`references/orquestracao.md` §9.6): agent idle com pendência executável volta ao trabalho; pendência que depende de outro → mata e enfileira com gatilho de dependência; terminou → mata. Nada de subagent parado entre itens.
+
 ## 3. Continuidade à prova de parada (o mecanismo)
 - **Stop hook `overdev-stop.sh`** (o núcleo): quando o agente tenta encerrar o turno, o
   hook conta os `- [ ]` abertos e roda o `.schematize/overdev/gate.sh` (se houver). Sobrou item ou o

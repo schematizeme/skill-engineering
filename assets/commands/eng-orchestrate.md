@@ -33,6 +33,7 @@ Antes de qualquer agent rodar, escreva **`<projeto>/<projeto>_archive/orchestrat
 ## 5. Peça aprovação
 
 Mostre o plano (unidades × agents, ondas, custo aproximado, gate). **Só após "ok"** dispare a onda 1. **A cada onda que fecha, atualize a tabela de status** no checkpoint. Retomada = ler o checkpoint e rodar só `PENDENTE/FALHOU` (sem retry infinito; falhou 2× → gate humano). **Cada entrega é revisada por você (diff + gate) e, se falhar, devolvida ao subagent — você não corrige com a própria mão** (exceto a exceção estreita da §9.1). Achado crítico pausa e reporta.
+**A cada onda que fecha, varredura de ociosos (§9.6):** idle com pendência executável → reuse (SendMessage); pendência que depende de outro agent → mate (`TaskStop`) e enfileire com gatilho de dependência (`BLOQUEADA`); terminou → mate. Sem frota ociosa.
 
 ## 6. Consolide
 

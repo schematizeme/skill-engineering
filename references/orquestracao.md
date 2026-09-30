@@ -53,9 +53,9 @@
 
 Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda morre no meio. **O estado nunca vive só nos eventos.** A verdade do fan-out mora num **MD de checkpoint** no archive, escrito **antes** de qualquer agent rodar e atualizado a cada onda — assim, se tudo cair, você **retoma lendo o MD**, sem refazer o que já ficou pronto.
 
-1. **Antes de disparar a onda 1**, grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
+1. **Antes de disparar a onda 1**, grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU / BLOQUEADA (depende de X)) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
 2. **Cada subagent grava o próprio resultado** num `.md` no archive (não só retorna pelo evento) — `…/orchestration/<tarefa>/<unidade>.md` com o que fez, arquivos tocados e o pronto/erro. Resultado que só existe no evento **não existe**.
-3. **A cada onda que fecha**, o orquestrador **atualiza a tabela de status** no MD de checkpoint. O MD é sempre o retrato atual.
+3. **A cada onda que fecha**, o orquestrador **atualiza a tabela de status** no MD de checkpoint. O MD é sempre o retrato atual. Em seguida faça a **varredura de ociosos** (§9.6): nenhum agent fica parado esperando.
 4. **Retomada:** se a sessão cai, o próximo passo é **ler o checkpoint** e disparar só as unidades `PENDENTE/FALHOU` — nunca recomeçar do zero. Sem retry infinito; unidade que esgota a escada de modelo (§9.3) vira gate humano.
 
 > Isto é o mesmo princípio do handoff (§34.1) e do archive (§28): **MD como memória durável**. Se a resposta a "e se travar agora?" não for "abro o MD e continuo", o fan-out está sem rede.
@@ -96,3 +96,13 @@ Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda 
 
 ### 9.5 Relação com §1 (tempo > tokens)
 Não conflita: paralelizar continua sendo o padrão para o relógio; a §9 escolhe o **executor mais barato que resolve**. Tempo do usuário > tokens; entre dois executores que entregam no mesmo tempo, o mais barato vence.
+
+### 9.6 Sem frota ociosa (ciclo de vida do subagent)
+- **Agent parado é custo:** polui a tela do humano e segura recurso (RAM/slots do governador de concorrência). O orquestrador **não mantém vários subagents idle ao mesmo tempo**.
+- **Varredura de ociosos** — a cada onda que fecha, a cada notificação de conclusão e antes de despachar a próxima onda, o orquestrador lista os agents (no Claude Code: `ListAgents`) e classifica cada idle:
+  1. **Tem pendência executável agora** → **põe pra trabalhar** (SendMessage com a próxima micro-task/correção; aproveita o contexto quente, §4 passo 6).
+  2. **Pendência depende de outro agent/unidade ainda não pronta** → **mata o agent** (`TaskStop`) e **enfileira a task** no checkpoint (§7) com **gatilho de dependência** explícito (`depende_de: <unidade>` / status `BLOQUEADA`); quando a dependência fechar, **abre um agent novo** (sonnet) com o brief. Nunca deixar agent vivo "esperando" outro.
+  3. **Terminou** (entrega revisada e aceita, nada mais pra ele) → **mata** (`TaskStop`). O resultado já está no archive (§7); o agent não é memória.
+- **Só é agent do orquestrador o que ELE abriu.** Sessões interativas do humano ou de outros projetos não são tocadas.
+- O checkpoint (§7) ganha o status **`BLOQUEADA (depende de X)`** além de PENDENTE/EM ANDAMENTO/FEITO/FALHOU.
+- No overdev, a varredura roda a cada item fechado no laço; nada de subagent parado entre itens.
