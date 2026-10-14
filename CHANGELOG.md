@@ -13,6 +13,7 @@ Hierarquia de agentes (ADR-0024): o orquestrador continua sem desenvolver, mas a
 
 ### Adicionado
 - §9.3: tabela de roteamento, tabela de papéis default (`principal`, `trivial`, `executor`, `fallback-1`, `fallback-cursor`, `fallback-2`, `visual`, `imagem`, `complementar`), configuração em `agentes.toml` (global `~/.claude/schematize/agentes.toml` + override por projeto) e na aba "Agentes" do overdev, e como chamar: Agent tool com `model`; `schematize-overdev delegar --papel <p> --brief-stdin --json` (rc 3 = indisponível → `proximo`); sem overdev: `codex exec -m gpt-5.6-terra -s workspace-write --json -C <dir> "<brief>"`.
+- **Release automatizado**: `.github/workflows/release.yml` (tag `v*` -> guarda `tag == v$(cat VERSION)` -> `scripts/build-zip.sh` -> `gh release create` com `skill-engineering.zip`; actions pinadas por SHA) e `scripts/build-zip.sh` (zip determinístico, topo `schematize-engineering/`, sem `.git`/`.github`/`versions`/`install.sh`/`README.md`).
 
 ## [0.26.0] — 2026-10-14
 Saneamento de coerência (vistoria de 2026-10-14): o texto do overdev contradizia o hook, havia hash de senha e rol de linguagens com regras divergentes entre arquivos, e o `SKILL.md` repetia ~300 palavras por piso que já moram nas references.
