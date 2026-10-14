@@ -1,3 +1,4 @@
+<!-- herdado de schematize-engineering — não edite aqui (fonte: skill-engineering/assets/herdados/arquivos/contexto-claude-code.md; regenere: node tools/sync-herdados.mjs) -->
 # Gestão de Contexto no Claude Code (handoff em sessões longas)
 
 > Parte da skill **schematize-engineering**. **É o DONO do handoff de contexto**: o §34.1 do `entrega.md` **da base** (`schematize-engineering`) é o *gatilho* (quando parar e arquivar); o *como* — formato dos dois MDs, hooks, `/compact`, o que entra em cada seção — é aqui, e só aqui. Implementa também a §28 (archive). Conteúdo específico de ferramenta (Claude Code / VS Code) — o princípio normativo está no `entrega.md` **da base** (`schematize-engineering` -> `references/entrega.md` §34.1) — o recorte local deixou de repeti-lo quando virou ponteiro.
@@ -24,6 +25,8 @@ Janela padrão é 200k; modelos de 1M (Fable 5, Opus 4.6+, Sonnet 4.6 variante `
 1. **StatusLine monitor** (`scripts/hooks/context-monitor.mjs`) — detecta o cruzamento do `CTX_THRESHOLD`, acende um flag visível na barra e grava um backup bruto de segurança em `<projeto>/<projeto>_archive/context/`.
 2. **Instrução no `CLAUDE.md`** — ao ver o flag, o Claude **gera os MDs ricos** (`context.md` + `checklist.md`) e roda `/compact`. (O checklist "feito vs aberto" só fica bom escrito pelo modelo.)
 3. **PreCompact hook** (`scripts/hooks/precompact-backup.mjs`) — rede de segurança determinística: dump do estado antes de toda compactação, independente de o modelo ter lembrado.
+
+Os hooks (`scripts/hooks/*.mjs`) são **bundlados e agnósticos de linguagem** — os mesmos scripts servem qualquer skill da casa.
 
 ## Instalação
 
