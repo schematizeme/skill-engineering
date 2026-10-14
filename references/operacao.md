@@ -71,7 +71,7 @@
 
 ## 24. Qualidade e Git
 
-**Commits:** Conventional Commits.
+**Commits:** Conventional Commits (regra completa, assinatura, PR e rulesets: `schematize-git → references/fluxo.md`).
 **Versionamento:** SemVer.
 
 **Branches — trunk-based como padrão**
@@ -133,6 +133,10 @@ GitFlow (`develop`) é opcional e exige justificativa — só vale a pena em tim
 - RCA (root cause analysis) documentado.
 - Ações preventivas rastreáveis (issue/task) com prazo.
 - Repositório central de postmortems acessível ao time.
+
+> Piso aqui; a resposta ao incidente (severidade SEV1-4, papéis, mitigar antes de diagnosticar,
+> LGPD/ANPD, postmortem e recorrência) é da `schematize-incident`
+> (`schematize-incident → references/severidade.md`, `→ references/postmortem.md`).
 
 ---
 

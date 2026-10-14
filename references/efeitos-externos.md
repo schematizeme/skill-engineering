@@ -112,7 +112,7 @@ Mesma classe de bug, mesmo guard, mesmo default:
 - **Webhook para terceiro:** aponta para receptor local (`webhook.site` **não** — é público;
   use um sink interno). Nunca a URL do parceiro.
 - **Pagamento/cobrança:** chave de teste do PSP, sempre. Cartão real em não-prd é incidente
-  financeiro, não bug.
+  financeiro, não bug. Regra e gate: `schematize-payments → references/nao-cobrar-fora-de-prd.md`.
 - **Agente/LLM com tool de envio (`schematize-ai`):** a tool herda o **mesmo** provider guardado.
   Modelo não decide destinatário externo — o enforcement é determinístico, no servidor.
 

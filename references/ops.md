@@ -1,5 +1,7 @@
 # Operação pelo ops — ambientes, instalação e correção (control plane)
 
+> Incidente em prd (severidade, comando, comunicação, postmortem): `schematize-incident → references/papeis-e-comando.md`. Aqui fica só o break-glass auditado.
+
 > O **`<projeto>_ops`** é a **interface única** de operação do sistema. Invariantes desta reference, todos **INEGOCIÁVEIS**: (1) nada chega ao servidor sem passar pelo **fluxo de promoção** (dev local → teste local → GitHub → hml → prd); (2) o ops provisiona num **workspace por aplicação** (`/<app>/`) e todo **redeploy é destrutivo na aplicação, semeado pelo `/<app>/.env` global** — mas **nunca destrói dados**; (3) cada serviço roda **isolado por usuário** (user Linux + systemd hardened); (4) **100%** de instalação/atualização/correção/config passa por uma **ferramenta do ops** — nunca à mão; (5) instalar é **paralelo por padrão** (= `nproc`), e falha no paralelo = **bug de independência** (prioridade máxima). Contexto do ops: `arquitetura.md` §2. Deploy/ambientes: `operacao.md` §21. Test kit do sistema vivo: skill **schematize-qa**.
 
 ## 1. Ambientes e o fluxo de promoção (nada direto no servidor)

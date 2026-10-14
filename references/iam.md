@@ -12,6 +12,11 @@ suspeita); **recuperação tão forte quanto o login**; **deny-by-default**; **e
 no servidor**. O buraco clássico é ter 2FA no login e um reset por 1 email que passa por
 cima — aqui isso é vetado.
 
+> **Piso aqui, desenho lá.** Este arquivo mantém o piso inegociável de IAM; o desenho do broker
+> `auth.<domínio>` (OIDC/OAuth 2.1 + PKCE, passkeys, sessão/refresh, ReBAC, recuperação) e seus gates
+> são da `schematize-iam` (`schematize-iam → references/topologia.md`, `→ references/protocolos.md`,
+> `→ references/authz-rebac.md`). Contrato de API/webhook do IdP: `schematize-api → references/contrato-rest.md`.
+
 ## 1. Topologia — auth é uma APLICAÇÃO SEPARADA
 
 - **A autenticação é um serviço próprio, com link próprio e front próprio**, servido em

@@ -5,6 +5,8 @@ disciplina do overdev (Stop-hook rejeita parada com item aberto). Cada item é p
 e traz **como provar** — checkbox sem prova NÃO fecha. As fases são PORTÕES: não se avança de `Fn`
 sem o `GATE Fn-1` verde. Conclusão legítima = **todo item `- [x]` com prova E o `GATE F6` (pentest)
 verde**. Deriva de `iam.md` (a normativa); onde este arquivo e o `iam.md` divergirem, o `iam.md` manda.
+O checklist mantém o piso; a dona do desenho do broker é a `schematize-iam` (comandos `/iam-audit`,
+`/iam-review`, `/iam-authz`; `schematize-iam → references/topologia.md`).
 
 Convenção (mesma do overdev): `- [ ]` aberto de máquina · `- [x]` feito+provado · `- [H ]` item que
 só o humano fecha (decisão/aprovação) · `- [~]` on-hold (pergunta parkeada). "prova:" = o teste que

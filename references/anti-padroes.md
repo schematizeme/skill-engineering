@@ -170,7 +170,7 @@ Prioridades, em ordem de desempate:
     → Limite explícito + backoff exponencial + jitter (§9, §18).
 
 26. **`Idempotency-Key` aceito mas ignorado** (header existe, lógica não).
-    → Implementar de fato a deduplicação (§12).
+    → Implementar de fato a deduplicação (§12; detalhe em `schematize-api → references/idempotencia.md`).
 
 27. **Dual-write** — gravar no banco e publicar no broker no mesmo fluxo, sem outbox.
     → Transactional Outbox (§9, Anexo B).

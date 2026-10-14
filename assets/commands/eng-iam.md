@@ -3,6 +3,8 @@ description: schematize-engineering — força/audita/scaffolda o IAM da casa (i
 argument-hint: "[bootstrap | audit | migrate]"
 ---
 
+Para auditar ou revisar só o IAM de um projeto com auth, existem também `/iam-audit` e `/iam-review` (`schematize-iam`); este comando é o orquestrador restritivo.
+
 Governe identidade e autorização pelo padrão IAM da casa (`references/iam.md` = a normativa;
 `references/iam-checklist.md` = o checklist exaustivo por fase). **Plan-first E restritivo:** audita,
 mostra o plano, pede aprovação, então executa **sob a disciplina do overdev** — o checklist é o juiz,

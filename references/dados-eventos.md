@@ -100,6 +100,10 @@ Exemplos: `catalog.product.created`, `billing.invoice.paid`.
 ## 12. APIs
 
 **MUST**
+> Piso de API abaixo; o contrato completo (contract-first, gRPC/protobuf, webhooks assinados, erros
+> RFC 9457, cursor, Sunset) é da `schematize-api` (`schematize-api → references/contrato-rest.md`,
+> `→ references/webhooks.md`, `→ references/idempotencia.md`).
+
 - **OpenAPI 3.1** em `/docs/openapi.yaml` — fonte da verdade.
 - Versionamento na URL: `/v1`, `/v2`.
 - Validação de payload na borda.

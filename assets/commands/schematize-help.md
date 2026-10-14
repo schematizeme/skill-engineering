@@ -1,5 +1,5 @@
 ---
-description: Índice ÚNICO de todos os comandos schematize instalados (as 37 skills da casa) — o que cada um faz, agrupado por skill
+description: Índice ÚNICO de todos os comandos schematize instalados (as 45 skills da casa) — o que cada um faz, agrupado por skill
 ---
 
 Mostre o **índice completo** dos comandos schematize — todas as skills num lugar só. É o "help dos helps".
@@ -25,9 +25,9 @@ done
 
 Uma tabela por **grupo** (seção 3), só com as skills **instaladas**; colunas: **comando** · **o que faz** (1 linha da `description:`). Encurte prefixos redundantes (`schematize-xxx — `). Skill do catálogo que não está instalada entra na legenda final como não instalada.
 
-Padrões comuns a quase todas (explique 1 vez, no topo): `/<prefixo>-help` lista os comandos da skill · `/<prefixo>-load` carrega TODO o corpo normativo · `/<prefixo>-claude` instala/mescla o `CLAUDE.md` sempre-on · `/<prefixo>-index` (re)gera índice/MAPA no archive · `/<prefixo>-review` gate da DoD/anti-padrões no diff · `/<prefixo>-cc` / `/<prefixo>-handoff` context compact / handoff no archive. Depois liste **só os comandos próprios** de cada skill, com destaque (ex.: `/eng-overdev`, `/eng-orchestrate`, `/eng-scan`, `/qa-plan`, `/pentest-gate`, `/archive-todos`, `/scaffold-new`).
+Padrões comuns a quase todas (explique 1 vez, no topo): `/<prefixo>-help` lista os comandos da skill · `/<prefixo>-load` carrega TODO o corpo normativo · `/<prefixo>-claude` instala/mescla o `CLAUDE.md` sempre-on · `/<prefixo>-index` (re)gera índice/MAPA no archive · `/<prefixo>-review` gate da DoD/anti-padrões no diff · `/<prefixo>-cc` / `/<prefixo>-handoff` context compact / handoff no archive. Depois liste **só os comandos próprios** de cada skill, com destaque (ex.: `/eng-overdev`, `/eng-orchestrate`, `/eng-scan`, `/qa-plan`, `/pentest-gate`, `/archive-todos`, `/scaffold-new`, `/iam-audit`, `/api-review`, `/git-commit`, `/inc-declare`).
 
-## 3. Catálogo das 37 skills (slug · prefixo de comando · domínio)
+## 3. Catálogo das 45 skills (slug · prefixo de comando · domínio)
 
 Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 
@@ -39,7 +39,12 @@ Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 - `schematize-audit` · `/audit-*` — prova que todo checklist foi sanado (órfãos RED).
 - `schematize-qa` · `/qa-*` — Q.A.: pirâmide de testes, "verde de verdade", plan-first.
 - `schematize-pentest` · `/pentest-*` — segurança ofensiva defensiva/red-team autorizado.
+- `schematize-iam` · `/iam-*` — broker de identidade `auth.<domínio>`: OIDC/OAuth 2.1 + PKCE, passkeys, ReBAC, recuperação (o orquestrador restritivo é `/eng-iam`).
+- `schematize-api` · `/api-*` — contrato de API: OpenAPI contract-first, gRPC, webhooks assinados, idempotência, deprecação.
 - `schematize-docs` · `/docs-*` — ADR, runbook, OpenAPI, índice/MAPA.
+- `schematize-skill-dev` · `/skill-*` — criar e manter skills do catálogo: anatomia, description, herdados, lint, release, grafo.
+- `schematize-git` · `/git-*` — fluxo git: trunk-based, Conventional Commits, assinatura, PR pequeno, rulesets, segredo commitado, tags.
+- `schematize-incident` · `/inc-*` — resposta a incidente: SEV1-4, papéis, mitigação, LGPD/ANPD, postmortem blameless.
 - `schematize-models` · `/models-*` — orquestra Codex, Gemini e Cursor como subagents; imagem sempre fora do Claude (pergunta qual usar); saída externa não confiável.
 
 **Linguagens do rol de backend (por fit + ADR, sem hierarquia)**
@@ -53,7 +58,7 @@ Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 
 **Domínio**
 - `schematize-web` · `/web-*` — frontend (Next.js/Astro). `schematize-design` · `/design-*` — direção visual, wireframe antes do código, anti-AI-slop. `schematize-mobile` · `/mobile-*` — apps iOS/Android/cross. `schematize-desktop` · `/desktop-*` — software local/nativo.
-- `schematize-data` · `/data-*` — engenharia de dados. `schematize-database` · `/database-*` — modelagem relacional. `schematize-ai` · `/ai-*` — software com LLM.
+- `schematize-data` · `/data-*` — engenharia de dados. `schematize-analytics` · `/analytics-*` — analytics de produto privacy-first (tracking plan, consentimento, A/B). `schematize-payments` · `/pay-*` — pagamentos BR (PIX, boleto, cartão sem PAN, ledger; nunca cobra fora de prd). `schematize-database` · `/database-*` — modelagem relacional. `schematize-postgres` · `/pg-*` — operar o PostgreSQL (EXPLAIN, vacuum, locks, backup/PITR, RLS). `schematize-ai` · `/ai-*` — software com LLM.
 - `schematize-infra` · `/infra-*` — infra/DevOps/SRE. `schematize-docker` · `/docker-*` — Dockerfile/OCI, compose, SBOM, cosign, hardening. `schematize-terraform` · `/tf-*` — IaC com OpenTofu/Terraform (state, módulos, plan/apply gated). `schematize-observability` · `/obs-*` — OpenTelemetry, SLO, alertas, dashboards como código.
 - `schematize-seo` · `/seo-*` — SEO (estratégia e técnico). `schematize-seo-writing` · `/seow-*` — redação SEO em 4 passos com checador. `schematize-institutional` · `/institutional-*` — site institucional.
 

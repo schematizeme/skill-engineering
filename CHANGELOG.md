@@ -3,6 +3,15 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.28.0] — 2026-10-14
+O catálogo passou a 45 skills e 8 delas tomaram assuntos que a base detalhava; a base mantém o piso e aponta a dona.
+
+### Alterado
+- `assets/commands/schematize-help.md`: 45 skills (entram skill-dev, git, incident, iam, api, postgres, analytics, payments, cada uma na seção do seu domínio).
+- Ponteiros em vez de duplicação: `iam.md` e `iam-checklist.md` -> `schematize-iam`; contrato de API/webhook em `dados-eventos.md` e `anti-padroes.md` -> `schematize-api`; cobrança em `efeitos-externos.md` -> `schematize-payments`; incidente/postmortem em `operacao.md` e `ops.md` -> `schematize-incident`; Conventional Commits em `operacao.md` -> `schematize-git`.
+- `/eng-iam` cita `/iam-audit` e `/iam-review`.
+- description reduzida a 190 caracteres (orçamento de descriptions do catálogo estourou com 45 skills).
+
 ## [0.27.1] — 2026-10-14
 A skill nova `schematize-models` precisa ter um ponto de entrada na base.
 
