@@ -3,6 +3,12 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.28.1] — 2026-10-14
+O catálogo passou a 46 skills com a entrada de `schematize-bots`.
+
+### Alterado
+- `assets/commands/schematize-help.md`: 46 skills; entram `schematize-bots` e os comandos `/bot-*`.
+
 ## [0.28.0] — 2026-10-14
 O catálogo passou a 45 skills e 8 delas tomaram assuntos que a base detalhava; a base mantém o piso e aponta a dona.
 

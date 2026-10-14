@@ -1,5 +1,5 @@
 ---
-description: Índice ÚNICO de todos os comandos schematize instalados (as 45 skills da casa) — o que cada um faz, agrupado por skill
+description: Índice ÚNICO de todos os comandos schematize instalados (as 46 skills da casa) — o que cada um faz, agrupado por skill
 ---
 
 Mostre o **índice completo** dos comandos schematize — todas as skills num lugar só. É o "help dos helps".
@@ -27,7 +27,7 @@ Uma tabela por **grupo** (seção 3), só com as skills **instaladas**; colunas:
 
 Padrões comuns a quase todas (explique 1 vez, no topo): `/<prefixo>-help` lista os comandos da skill · `/<prefixo>-load` carrega TODO o corpo normativo · `/<prefixo>-claude` instala/mescla o `CLAUDE.md` sempre-on · `/<prefixo>-index` (re)gera índice/MAPA no archive · `/<prefixo>-review` gate da DoD/anti-padrões no diff · `/<prefixo>-cc` / `/<prefixo>-handoff` context compact / handoff no archive. Depois liste **só os comandos próprios** de cada skill, com destaque (ex.: `/eng-overdev`, `/eng-orchestrate`, `/eng-scan`, `/qa-plan`, `/pentest-gate`, `/archive-todos`, `/scaffold-new`, `/iam-audit`, `/api-review`, `/git-commit`, `/inc-declare`).
 
-## 3. Catálogo das 45 skills (slug · prefixo de comando · domínio)
+## 3. Catálogo das 46 skills (slug · prefixo de comando · domínio)
 
 Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 
@@ -44,6 +44,7 @@ Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 - `schematize-docs` · `/docs-*` — ADR, runbook, OpenAPI, índice/MAPA.
 - `schematize-skill-dev` · `/skill-*` — criar e manter skills do catálogo: anatomia, description, herdados, lint, release, grafo.
 - `schematize-git` · `/git-*` — fluxo git: trunk-based, Conventional Commits, assinatura, PR pequeno, rulesets, segredo commitado, tags.
+- `schematize-bots` · `/bot-*` — bots de chat (Discord, Telegram, Slack, WhatsApp, Matrix): token em cofre, webhook assinado, ack no prazo, rate limit, moderação.
 - `schematize-incident` · `/inc-*` — resposta a incidente: SEV1-4, papéis, mitigação, LGPD/ANPD, postmortem blameless.
 - `schematize-models` · `/models-*` — orquestra Codex, Gemini e Cursor como subagents; imagem sempre fora do Claude (pergunta qual usar); saída externa não confiável.
 
