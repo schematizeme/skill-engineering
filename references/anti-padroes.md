@@ -109,7 +109,7 @@ Prioridades, em ordem de desempate:
    → Validação completa em toda request (§14).
 
 10. **Hash de senha fraco** — MD5, SHA1, sem salt, ou plaintext.
-    → bcrypt cost ≥ 12 ou argon2id (§14).
+    → argon2id para senha nova; bcrypt/PBKDF2 só como legado a migrar com rehash no próximo login (§14, `references/iam.md`).
 
 11. **`Math.random()` (ou rand não-cripto) pra token, id de sessão, código de reset, nonce.**
     → CSPRNG: `crypto.randomBytes`, `crypto/rand` (§14).

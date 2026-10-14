@@ -22,7 +22,7 @@ antes de produzir código ou decisão — não trabalhe de memória.
 2. **SQL sempre parametrizado** — concatenar string em query é proibido.
 3. **Auth e autorização server-side.** `tenant_id`/role/`user_id` vêm do token
    verificado, nunca do cliente. JWT validado por inteiro (assinatura, exp, aud,
-   iss, alg em allowlist). Senha em bcrypt cost ≥ 12 ou argon2id. Token/sessão por
+   iss, alg em allowlist). Senha: argon2id para senha nova; bcrypt/PBKDF2 só como legado, com rehash no próximo login (`references/iam.md`). Token/sessão por
    CSPRNG, nunca `Math.random()`.
 4. **Erro nunca engolido** (`catch {}`, `except: pass`, `_ = err`); sem
    `any`/`@ts-ignore`/`unwrap()` pra calar o compilador.
@@ -86,10 +86,10 @@ CI verde e review aprovado. Detalhe na skill, `references/entrega.md` (§35).
   útil > 300 linhas é FLAG** (não bloqueia, mas **sempre sinaliza**): indício de
   função muito extensa / falta de abstração — registra como dívida e revê quando as
   prioridades permitirem; observabilidade tem folga natural (~400 úteis). Função
-  ideal ≤ 50 linhas, responsabilidade única (§6, `references/padroes-codigo.md`).
+  ideal ≤ 50 linhas, responsabilidade única (`references/padroes-codigo.md` §2).
 - **Comente TODA função** (doc da linguagem) com contexto explícito: **O quê** (o que
   faz) e **Onde** (quem chama / em que fluxo foi prevista), além de efeitos colaterais.
-  Esse comentário alimenta o índice de microfunções (§6, §39).
+  Esse comentário alimenta o índice de microfunções (`padroes-codigo.md` §3, §39).
 - **Mantenha o índice de funcionalidades atualizado** no mesmo PR (§39), em
   **`<projeto>/<projeto>_archive/index/`** (nunca no root): `MAPA.md`, `INDEX_GLOBAL.md`
   (repos/pastas/o que faz/como se comunica) e `INDEX_FUNCTIONS.md` (função → o quê →
@@ -109,9 +109,9 @@ Ao ver "⚠ LIMITE" no status line (limite de handoff cruzado), ou ao se aproxim
 do teto da janela de contexto: **PARE a tarefa atual e, ANTES de qualquer
 compactação**, faça o handoff arquivado (§34.1, §28):
 
-1. Gere `<projeto>/<projeto>_archive/context/<YYYY-MM-DD-HH-MM-SS>-context.md` — estado do
+1. Gere `<projeto>/<projeto>_archive/context/AAAA-MM-DD-<slug>-context.md` — estado do
    projeto, decisões tomadas, arquivos tocados, onde parou.
-2. Gere `<projeto>/<projeto>_archive/context/<YYYY-MM-DD-HH-MM-SS>-checklist.md` —
+2. Gere `<projeto>/<projeto>_archive/context/AAAA-MM-DD-<slug>-checklist.md` —
    **FEITO vs EM ABERTO**.
 3. Só então rode `/compact` (com foco na tarefa corrente).
 

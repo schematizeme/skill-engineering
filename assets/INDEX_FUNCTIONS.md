@@ -1,7 +1,7 @@
 # Índice de Microfunções — <serviço>
 
 > Grafo DETALHADO interno de um serviço (§39): funções como nós, chamadas intra-serviço como
-> arestas, cada nó com `arquivo:linha`. Idealmente **gerado** dos doc-comments obrigatórios (§6)
+> arestas, cada nó com `arquivo:linha`. Idealmente **gerado** dos doc-comments obrigatórios (`padroes-codigo.md` §3)
 > via `scripts/build-index.mjs`. NÃO editar à mão as seções geradas — corrija o doc-comment na
 > origem e regenere. **Espelho durável** de `.schematize/grafos/<servico>.md` (local operacional
 > vivo). Local do espelho: `<projeto>/<projeto>_archive/index/INDEX_FUNCTIONS.md`. Última geração: <data>.

@@ -15,7 +15,7 @@ soltar a mão da granularidade.
   (§3) e **até ~500 são código útil**. Passou de **750 no total** — ou de **~500 de
   código útil** — → **quebre em mais de um arquivo**, por coesão (uma
   responsabilidade por arquivo), nunca por corte arbitrário no meio de uma função.
-  O gate `check-diff` (§6) **BLOQUEIA** acima do teto.
+  O gate `check-diff` **BLOQUEIA** acima do teto.
 - **FLAG em > 300 linhas de código útil** (não bloqueia, mas **sempre sinaliza**):
   se o **código útil** de um arquivo — descontando comentário e linha em branco —
   passar de **300 linhas**, isso é **indício** de que a função/arquivo está **muito

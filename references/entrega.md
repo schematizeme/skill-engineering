@@ -67,8 +67,8 @@ Sessões longas de agente degradam quando o contexto enche: o modelo "esquece" d
 **MUST**
 - Definir um **limite de handoff** (tokens) abaixo do teto da janela — cedo o suficiente pra sobrar espaço pra escrever o resumo. Sugestão: ~25% da janela (ex.: 250k numa janela de 1M).
 - Ao cruzar o limite, **antes de qualquer compactação**, gerar dois artefatos em `<project>/<project>_archive/context/`:
-  - `<YYYY-MM-DD-HH-MM-SS>-context.md` — estado do projeto, decisões tomadas, arquivos tocados, onde parou.
-  - `<YYYY-MM-DD-HH-MM-SS>-checklist.md` — **feito vs. em aberto**.
+  - `AAAA-MM-DD-<slug>-context.md` — estado do projeto, decisões tomadas, arquivos tocados, onde parou.
+  - `AAAA-MM-DD-<slug>-checklist.md` — **feito vs. em aberto**.
 - Só então compactar/limpar o contexto. O handoff é archive obrigatório (§28) — armazenar **sempre** em `<project>/<project>_archive`.
 - **Rede de segurança determinística:** um backup do estado é capturado automaticamente antes de toda compactação (manual ou automática), independente de o agente ter lembrado de gerar os MDs acima.
 
@@ -92,7 +92,7 @@ Uma task está pronta quando, cumulativamente:
 - [ ] **Pentest de entrada limpo: sem `500`, sem coerção de tipo, sem eco não-escapado, sem vazamento cross-tenant (skill `schematize-pentest`)**
 - [ ] Lint, fmt, security scan limpos
 - [ ] **Nenhum item da §37 (anti-padrões vetados) presente no diff**
-- [ ] **Arquivos ≤ 750 linhas (~500 úteis + ~250 comentário); código útil > 300 linhas (~400 obs) flagueado e registrado como dívida (§6); toda função com doc-comment de contexto — o quê + onde é usada**
+- [ ] **Arquivos ≤ 750 linhas (~500 úteis + ~250 comentário); código útil > 300 linhas (~400 obs) flagueado e registrado como dívida (`padroes-codigo.md`); toda função com doc-comment de contexto — o quê + onde é usada**
 - [ ] **Índice de funcionalidades atualizado no mesmo PR — global e microfunções (§39)**
 - [ ] Observabilidade implementada (logs, métricas, traces, audit se aplicável)
 - [ ] OpenAPI atualizada (se for API)
@@ -166,7 +166,7 @@ O código diz **como** está agora; o índice diz **o que existe, onde mora e co
 - O grafo é **fonte da verdade**: ao planejar uma feature, consulte-o primeiro pra não reimplementar o que já existe (anti-duplicação — liga com DRY semântico, §1).
 
 **SHOULD — geração assistida**
-- O grafo detalhado é **gerado por script** que varre os doc-comments padronizados (§6) e monta a tabela `nome | o quê | ... | arquivo:linha`. CI compara o commitado com o gerado; divergência aponta grafo ou comentário desatualizado.
+- O grafo detalhado é **gerado por script** que varre os doc-comments padronizados (`padroes-codigo.md` §3) e monta a tabela `nome | o quê | ... | arquivo:linha`. CI compara o commitado com o gerado; divergência aponta grafo ou comentário desatualizado.
 - Cada entrada linka pro `arquivo:linha` de origem.
 - `GRAFO_GLOBAL.md` revisado em cada mudança arquitetural (junto com o ADR, §27).
 

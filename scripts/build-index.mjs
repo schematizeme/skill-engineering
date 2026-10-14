@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * build-index.mjs — gera o índice de microfunções (§39) a partir dos doc-comments
- * obrigatórios das funções (§6). É o gerador que o gate `check-index.sh` compara
+ * obrigatórios das funções (`padroes-codigo.md` §3). É o gerador que o gate `check-index.sh` compara
  * contra o índice commitado.
  *
  * Convenção lida: um doc-comment imediatamente acima da função, com as linhas
@@ -138,7 +138,7 @@ for (const file of walk(raiz)) {
     if (!what || !where) missing++;
     const rel = path.relative(raiz, file) || path.basename(file);
     if (!byFile.has(rel)) byFile.set(rel, []);
-    byFile.get(rel).push({ name, what: what || "SEM DOC (§6)", where: where || "SEM DOC (§6)", fx, line: i + 1 });
+    byFile.get(rel).push({ name, what: what || "SEM DOC (padroes-codigo.md §3)", where: where || "SEM DOC (padroes-codigo.md §3)", fx, line: i + 1 });
     chaves.add(`${rel}:${i + 1}`);
   }
 }
@@ -149,7 +149,7 @@ out.push("# Índice de Microfunções (gerado)", "");
 out.push(`> Gerado por \`build-index.mjs\` a partir de \`${path.normalize(raiz)}\`. Não editar à mão.`);
 out.push(`> Determinístico por construção: a saída depende só da origem — o gate \`check-index.sh\` compara com o commitado.`, "");
 out.push(`> **Completude (§39):** N declarações vistas = **${N}** · M entradas emitidas = **${M}** · sem doc-comment = **${missing}**.`, "");
-if (missing) out.push(`> ATENÇÃO: ${missing} unidade(s) sem doc-comment de contexto completo (§6). Corrija na origem.`, "");
+if (missing) out.push(`> ATENÇÃO: ${missing} unidade(s) sem doc-comment de contexto completo (padroes-codigo.md §3). Corrija na origem.`, "");
 for (const [file, fns] of [...byFile].sort()) {
   out.push(`## ${file}`, "");
   out.push("| Função | O quê | Onde é usada | Efeitos | Linha |", "|---|---|---|---|---|");

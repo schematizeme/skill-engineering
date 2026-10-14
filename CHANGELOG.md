@@ -3,6 +3,24 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.26.0] — 2026-10-14
+Saneamento de coerência (vistoria de 2026-10-14): o texto do overdev contradizia o hook, havia hash de senha e rol de linguagens com regras divergentes entre arquivos, e o `SKILL.md` repetia ~300 palavras por piso que já moram nas references.
+
+### Corrigido
+- **`references/overdev.md` §3/§4/§4.1/§6 e `eng-overdev.md`**: `- [~]` **conta como aberto** (é o que `overdev-stop.sh` faz); sobrando só `[H ]`/`[~]` sem caminho, a saída é `.schematize/overdev/BLOCKED`. Fase 0 passa a listar **cinco** artefatos (0.5 briefing), igual à `schematize-overdev-context`.
+- **Hash de senha** (`SKILL.md`, `seguranca.md`, `anti-padroes.md`, `assets/CLAUDE.md`): argon2id para senha nova; bcrypt/PBKDF2 só legado com rehash — coerente com `iam.md`.
+- **PHP** (`arquitetura.md` §3.2): migra por funcionalidade quando tocado (`linguagens.md` §2), sem "migração sumária".
+- **Referências**: "pisos §6" (§6 é Complexidade) apontam para `padroes-codigo.md`; ADR-0005/0006 trocados pela regra; allowlist do root alinhada ao `docs-gate`; handoff `AAAA-MM-DD-<slug>-context.md` (convenção do archive); comandos `check-diff.sh`/`build-index.mjs` com o caminho instalado.
+- **CI** (`assets/ci`): `trivy-action@master` pinado por SHA (v0.36.0) e gitleaks por SHA (v2.3.9).
+
+### Adicionado
+- **`linguagens.md`**: coluna "Prefixo de comando" no rol; **§2.2 "Sancionadas fora do rol de backend"** (C/C++, Swift/Kotlin/Dart, Shell/Python); regra de desempate única, sem "padrão da casa".
+- **`/schematize-help`** reescrito: catálogo das 31 skills agrupado, lista viva via `ls ~/.claude/skills`.
+- `SKILL.md`: `/eng-load` e `/eng-claude` na tabela de comandos.
+
+### Alterado
+- **`SKILL.md`**: pisos reduzidos a 1–3 linhas com ponteiro à reference (a regra mora lá; nenhuma removida); descrição ≤ 350 caracteres; irmãs apontam para `/schematize-help`; citações a "item 48/49" viram §37 por título.
+
 ## [0.25.0] — 2026-09-30
 Ajuste de aplicabilidade: o checkpoint em MD antes de toda onda era pesado demais para tarefas pequenas e vinha sendo pulado na prática (2 rodadas de 6 e 2 agents); regra que não se cumpre vira ruído. Também: a descrição do frontmatter estava no teto de 1024 e enumerava pisos em vez de gatilhos; e os papéis do overdev eram só texto, sem enforcement.
 

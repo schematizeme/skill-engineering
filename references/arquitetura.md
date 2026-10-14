@@ -87,12 +87,11 @@ Node como linguagem de **serviço backend** está em saída (fora do rol sancion
 
 > Os percentuais (~30% pra extrair, ~50% pra finalizar) são os limiares da casa; ajuste por ADR se um módulo específico exigir. A regra é: parou de ser ajuste pontual, vira extração; passou da metade, termina.
 
-### 3.2 PHP — proibido
+### 3.2 PHP — em saída (sem serviço novo)
 
-**VETADO** — PHP não é linguagem da casa, em nenhuma camada.
-
-- Nenhum código novo em PHP.
-- Projeto existente em PHP é **migrado sumariamente** para uma linguagem do rol (`references/linguagens.md`) — prioridade de migração, com ADR e plano. Não é "quando der"; é dívida ativa a ser zerada.
+PHP não é linguagem do rol: **nenhum código novo em PHP** (VETADO). Projeto PHP existente é legado
+e **migra por funcionalidade quando tocado**, para uma linguagem do rol (`schematize-engineering →
+references/linguagens.md` §2), com ADR (§27) — as mesmas regras de gatilho (~30%/~50%) de §3.1.
 
 ---
 

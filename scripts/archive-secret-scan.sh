@@ -5,7 +5,7 @@
 #
 # Uso (pre-commit): bash scripts/archive-secret-scan.sh [dir]   (default: o diretorio atual)
 # O alvo e o `<projeto>/<projeto>_archive/` — a convencao `<projeto>/_archive` foi REVOGADA
-# na v0.19.0; a planta canonica esta na schematize-archive (references/archive.md, ADR-0005).
+# na v0.19.0; a planta canonica esta na schematize-archive (references/archive.md).
 # Sai 1 se achar candidato a segredo/PII. Usa gitleaks se disponível; senão regex.
 
 # strict-ok: coletor — varre tudo e soma os achados; `grep` sem match sai 1 e é resultado normal aqui, não erro (`schematize-shell` -> `references/piso.md` secao 1)

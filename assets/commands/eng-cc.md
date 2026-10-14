@@ -7,8 +7,8 @@ Você vai fazer o **handoff de contexto** desta sessão ANTES de compactar (§34
 Execute nesta ordem, sem pular nenhum passo. Se houver argumento ($ARGUMENTS), use-o
 como foco do resumo e da compactação.
 
-1. **Pasta e timestamp.** Use `${PROJECT_ARCHIVE:-<projeto>/<projeto>_archive/context}` como
-   destino e o timestamp atual no formato `YYYY-MM-DD-HH-MM-SS` (chame de `<ts>`).
+1. **Pasta e prefixo.** Use `${PROJECT_ARCHIVE:-<projeto>/<projeto>_archive/context}` como
+   destino e o prefixo `AAAA-MM-DD-<slug>` (data de hoje + slug curto do foco; chame de `<ts>`).
    Crie a pasta se não existir.
 
 2. **Escreva `<ts>-context.md`** — o CONTEXTO GERAL até aqui:

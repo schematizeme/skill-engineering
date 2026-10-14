@@ -20,7 +20,7 @@ Guarde **N = total de funções** por serviço/pasta. É o alvo de completude �
 
 Para **cada** serviço, um arquivo `.schematize/grafos/<servico>.md` — o grafo interno, funções como **nós** e chamadas intra-serviço como **arestas**. Para **cada** função encontrada, uma linha em tabela pipe:
 `nome | o quê | de onde vem -> pra onde vai | chama (out) | é chamada por (in) | efeitos | arquivo:linha`.
-Cada nó tem **`arquivo:linha`** e uma descrição de **uma linha** (coluna "o quê"). Fonte: `scripts/build-index.mjs` se existir; senão, extraia dos doc-comments (§3). **Nenhuma** função fica de fora por "não ser relevante".
+Cada nó tem **`arquivo:linha`** e uma descrição de **uma linha** (coluna "o quê"). Fonte: `node .claude/skills/schematize-engineering/scripts/build-index.mjs` se existir; senão, extraia dos doc-comments (§3). **Nenhuma** função fica de fora por "não ser relevante".
 
 **Auto-referência de fronteira:** quando uma função produz **saída pra outro serviço B**, marque esse nó como saída — `nome -> <servico-B>` — apontando pro global. É a aresta que **sai do grafo local** e reaparece no `GRAFO_GLOBAL.md`.
 
@@ -35,7 +35,7 @@ Cada nó tem **`arquivo:linha`** e uma descrição de **uma linha** (coluna "o q
 
 - Conte as entradas do grafo detalhado (**M**) e compare com **N**, **por serviço**.
 - **Se M < N → FALHE.** Liste, **pelo nome**, as `N - M` funções que ficaram de fora e volte ao passo 2 até `M == N`. Grafo com menos entradas que funções é bug, não resumo — o caso "90 linhas pra 100+ funções" é **reprovado aqui**.
-- Se `scripts/build-index.mjs` sair com código 1, há função sem doc-comment (§3): corrija **na origem** (o quê + de onde→pra onde), não no grafo.
+- Se o `build-index.mjs` sair com código 1, há função sem doc-comment (§3): corrija **na origem** (o quê + de onde→pra onde), não no grafo.
 
 ## 5. Espelho no archive + MAPA + confirmação
 

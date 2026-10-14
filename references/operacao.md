@@ -171,7 +171,7 @@ Formato MADR. Status: `proposed`, `accepted`, `deprecated`, `superseded by NNNN`
 > e o `scripts/collect-history.sh`). Este §28 é o **contrato** — o que a engenharia exige e o que
 > reprova na DoD —, não o manual. Manter os dois manuais foi o achado **D3** da vistoria de
 > 2026-08-21, e foi assim que **três plantas concorrentes** do archive passaram a existir
-> (ADR-0005).
+> — a regra é "uma planta só, na schematize-archive".
 
 **Esta seção não tem modo "pula pra ir mais rápido".** O archive é parte da entrega, não um extra.
 Tarefa sem archive = **tarefa não feita** (§35).
@@ -185,8 +185,9 @@ Tarefa sem archive = **tarefa não feita** (§35).
    é a **evolução do projeto documentada** — é o `git log` dele que responde *"como o sistema
    chegou aqui"*. (O operacional volátil é o `.schematize/`, esse sim gitignored.)
 3. **Todo MD gerado mora nele, nunca no root** — MAPA, índices, planos, relatórios, handoffs,
-   checkpoints, ADRs. O root fica limpo: código, config e os poucos MDs de mão (`README.md`,
-   `CLAUDE.md`, `LICENSE`, `CHANGELOG.md`). Antes de gravar um `.md`, o caminho **começa** com
+   checkpoints, ADRs. O root fica limpo: código, config e os poucos MDs de mão (`README`, `CLAUDE`,
+   `LICENSE`, `CHANGELOG`, `CONTRIBUTING`, `SECURITY`, mais os que o ecossistema exige: `SKILL`,
+   `AGENTS`, `CONTEXT`, `CODE_OF_CONDUCT`) — a lista é a do gate `docs-gate` da `schematize-docs`. Antes de gravar um `.md`, o caminho **começa** com
    `<projeto>/<projeto>_archive/`. Largar artefato gerado no root é violação (§37).
 4. **Toda decisão/plano/handoff relevante vira arquivo durável** — nada de histórico só no chat.
    É o que a `schematize-audit` depois **cobra**: o que não está gravado não aconteceu.
@@ -195,7 +196,7 @@ Tarefa sem archive = **tarefa não feita** (§35).
 
 **A planta canônica** (quais pastas, o que vai em cada uma) é **uma só** e vive na
 `schematize-archive` → `references/archive.md`, seção "Estrutura" — não a redefina aqui nem em
-lugar nenhum (ADR-0005). Rode **`/archive-init`** para materializá-la, e **`/archive-todos`** para
+lugar nenhum (uma planta só). Rode **`/archive-init`** para materializá-la, e **`/archive-todos`** para
 transformar o histórico recuperável no próximo checklist de overdev.
 
 > **Onde este §28 divergir da `schematize-archive`, ELA manda** no *como*; aqui manda o *o quê*

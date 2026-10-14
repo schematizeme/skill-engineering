@@ -25,7 +25,7 @@ cobertura faltante, não "sem problema":
 
 - **Correção:** bug lógico, off-by-one, condição invertida, `null`/`nil` não tratado, caminho de erro ausente, retorno ignorado, estado não inicializado.
 - **Anti-padrões (§37):** segredo no cliente, SQL concatenado, auth no client, `tenant_id` do body, JWT sem validar, `Math.random` pra token, catch que engole erro (`catch{}`/`except:pass`/`_ = err`), `any`/`@ts-ignore`/`unwrap()` pra calar o compilador, teste silenciado. (Cruza `anti-padroes.md`.)
-- **Pisos de código (§6):** arquivo >750 linhas (bloqueia), >300 úteis (flag), função >50 linhas, uma-função-por-arquivo violada, função sem doc-comment, god object.
+- **Pisos de código (`references/padroes-codigo.md` §1–§3):** arquivo >750 linhas (bloqueia), >300 úteis (flag), função >50 linhas, uma-função-por-arquivo violada, função sem doc-comment, god object.
 - **Duplicação & morto:** código copiado (mesmo bloco em N lugares), função/rota/branch morta, import/dep não usada, flag/config obsoleta.
 - **Testes:** caminho crítico sem teste, cobertura abaixo do piso, **guarda que não guarda** (teste verde que nunca reprovou o caso ruim — cruza **schematize-qa**, red-first), teste que o runner não coleta (glob de include), smoke sem self-check.
 - **Concorrência/recurso:** race/TOCTOU, lock faltando, `AbortController`/cancelamento ausente onde a resposta obsoleta vence, N+1, leak (conexão/arquivo/goroutine/handle não fechado), retry sem backoff.

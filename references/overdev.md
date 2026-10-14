@@ -19,7 +19,7 @@ Roda **só quando você chama** `/eng-overdev`. O hook é **inerte** sem um over
 plano raso, retrabalho e "reabrir o que já foi combinado". A Fase 0 é **obrigatória** e é a
 **primeira coisa** que o run faz — o laço (§2) só começa quando ela fecha.
 
-**O contrato da Fase 0 — os 4 artefatos, e o gate:**
+**O contrato da Fase 0 — os 5 artefatos, e o gate:**
 
 | # | Artefato | O que tem de conter | Onde |
 |---|---|---|---|
@@ -27,8 +27,9 @@ plano raso, retrabalho e "reabrir o que já foi combinado". A Fase 0 é **obriga
 | 0.2 | grafo carregado | o **MAPA/índice §39** lido (`/eng-index`); cada item do plano aponta o(s) **nó** que toca e as **arestas** afetadas. Sem índice, **gerá-lo é o 1º item** | `<projeto>_archive/index/` |
 | 0.3 | `PLAN.md` **pesado** | escopo (entra / **NÃO** entra), decomposição em itens **verificáveis** e do tamanho de **uma micro-task de Sonnet** (nó do grafo + **prova** + dependências + risco + executor `[sonnet]`/`[opus: <motivo>]`), ordem topológica, paralelismo (≥3 unidades independentes → `/eng-orchestrate`), riscos, DoD (§35) | `.schematize/overdev/` |
 | 0.4 | `CHECKLIST.md` | **derivado do plano**, exaustivo por contagem, 1 item por linha, cada um com **como provar**, nas 3 classes `- [ ]` · `- [H ]` · `- [~]`. Itens **dimensionados como micro-task de Sonnet** (§2 / `orquestracao.md` §9.2), cada um com a tag de executor `[sonnet]` (default) ou `[opus: <motivo>]` | `.schematize/overdev/` |
+| 0.5 | briefing | documento coeso que amarra objetivo + decisões + grafo + plano + checklist + riscos; é o que o overdev abre ao entrar no laço (`schematize-overdev-context` → `references/briefing.md`) | `<projeto>_archive/overdev/` |
 
-**Gate da Fase 0 (a linha 0.4 da tabela):** só entra no laço (§2) com os quatro prontos. Começar a tickar sem a fundação é a
+**Gate da Fase 0 (linhas 0.1–0.5 da tabela):** só entra no laço (§2) com os cinco prontos. Começar a tickar sem a fundação é a
 macaquice que a Fase 0 existe para matar.
 
 **O passo a passo de como produzir cada um** — como varrer a sessão, como ancorar no grafo, como
@@ -69,7 +70,7 @@ mais barato ao mais caro.
 
 ## 3. Continuidade à prova de parada (o mecanismo)
 - **Stop hook `overdev-stop.sh`** (o núcleo): quando o agente tenta encerrar o turno, o
-  hook conta os `- [ ]` abertos e roda o `.schematize/overdev/gate.sh` (se houver). Sobrou item ou o
+  hook conta os itens abertos (`- [ ]` máquina, `- [H ]` humano e `- [~]` on-hold) e roda o `.schematize/overdev/gate.sh` (se houver). Sobrou item ou o
   gate falhou → **rejeita a parada** e devolve ao agente a lista do que falta. É o que
   impede o "terminei" precoce: encerrar o turno = falar com o usuário, e o hook **bloqueia
   isso** até o checklist fechar.
@@ -98,7 +99,7 @@ Ao topar uma dúvida (mesmo que pareça bloqueante):
    responde quando voltar.
 2. **Marque aquele item como `- [~]` (on-hold)** — `schematize overdev park "<item>"
    "<pergunta>"` faz os dois (registra + marca).
-3. **SIGA para os outros itens.** On-hold **não** bloqueia o fim do run.
+3. **SIGA para os outros itens.** O `- [~]` não impede você de avançar nos demais, mas **conta como aberto** no hook: o run só termina quando ele for resolvido (vira `- [x]`) ou declarado em `.schematize/overdev/BLOCKED` (§4.1).
 
 **Escalar para Opus não é pergunta** (§2): o principal sobe o modelo do subagent sozinho, com o motivo
 registrado, sem parar nem consultar o humano. Só **esgotou Opus** (falhou 2×) vira `park`.
@@ -107,8 +108,13 @@ Assuma um **default razoável e documente-o** em vez de perguntar, sempre que o 
 errar for reversível. Só parkeia o que for de fato irreversível/ambíguo demais.
 
 ## 4.1. Paradas LEGÍTIMAS
-- **Concluído:** nenhum `- [ ]` aberto (tudo `- [x]` ou `- [~]`) **e** o gate passa → o
-  agente pode encerrar e reportar (o que ficou on-hold + as perguntas do txt).
+- **Concluído:** nenhum item aberto nas três classes (`- [ ]`, `- [H ]` e `- [~]` — tudo `- [x]`)
+  **e** o gate passa → o agente pode encerrar e reportar. **`- [~]` NÃO é conclusão** (é o que o
+  hook `overdev-stop.sh` faz: conta como aberto).
+- **Bloqueado (`BLOCKED`):** sobrou só `- [H ]` (humano) e/ou `- [~]` (pergunta parkeada) sem caminho
+  que a máquina resolva → escreva `.schematize/overdev/BLOCKED` listando, item a item, o que
+  precisa do usuário e a pergunta (também em `PERGUNTAS-OVERDEV.txt`); o hook então permite parar
+  e o usuário vê o que falta. É a saída honesta, não "concluído".
 - **Teto de budget** (`--max`, default 200): guardrail anti-loop → encerra e reporta o que
   falta. Não é "desistir cedo", é não girar pra sempre.
 - **Sem progresso mensurável (thrashing)** por vários ciclos → post-mortem curto, parkeia os
@@ -124,10 +130,11 @@ errar for reversível. Só parkeia o que for de fato irreversível/ambíguo dema
 - O gate do projeto (`/eng-review`, testes, lint) entra no `.schematize/overdev/gate.sh` sempre que dá.
 
 ## 6. Estados do checklist e control-plane
-- **Itens:** `- [ ]` aberto (tem que fazer) · `- [x]` feito (verificado) · `- [~]` on-hold
-  (pergunta parkeada, **não bloqueia** o fim do run).
+- **Itens:** `- [ ]` aberto (máquina fecha) · `- [H ]` aberto (só humano fecha) · `- [x]` feito
+  (verificado) · `- [~]` on-hold (pergunta parkeada: **conta como aberto**; só sai por resposta
+  ou por `BLOCKED`, §4.1).
 - **Layout operacional** `.schematize/overdev/` no root do projeto (trate como `.git` —
-  **gitignore**): `state.json`, `CHECKLIST.md`, `iterations`, `gate.sh`. O marcador canônico
+  **gitignore**): `state.json`, `CHECKLIST.md`, `iterations`, `gate.sh`, e (ao fim) `DONE` ou `BLOCKED`. O marcador canônico
   do projeto é a pasta **`.schematize/`** (contém `overdev/` e `grafos/`, §39); o antigo
   **`.overdev/` fica como LEGADO** — o motor Rust lê ambos e **auto-migra** para
   `.schematize/overdev/` no `overdev start`. `./PERGUNTAS-OVERDEV.txt` fica na **base** do

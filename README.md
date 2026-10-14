@@ -1,6 +1,6 @@
 # schematize-engineering
 
-> A **base comum de engenharia da casa** — agnóstica de linguagem. Arquitetura/DDD, MAPA+grafo+endpoints, segurança, dados/eventos, cadeia de suprimentos, observabilidade, operação/DoD/archive e anti-padrões. As skills de linguagem (`schematize-go`/`rust`/`web`/`node`) **especializam** esta base. Pacote de **skill normativa para [Claude Code](https://claude.com/claude-code)**. Parte do catálogo **schematize skills** ([skills.schematize.me](https://skills.schematize.me)).
+> A **base comum de engenharia da casa** — agnóstica de linguagem. Arquitetura/DDD, MAPA+grafo+endpoints, segurança, dados/eventos, cadeia de suprimentos, observabilidade, operação/DoD/archive e anti-padrões. As demais skills (linguagens, web, mobile, QA, pentest etc. — catálogo completo no comando `/schematize-help`) **especializam** esta base. Pacote de **skill normativa para [Claude Code](https://claude.com/claude-code)**. Parte do catálogo **schematize skills** ([skills.schematize.me](https://skills.schematize.me)).
 
 Use **esta** quando o projeto não é de uma linguagem específica, ou quando quer só os princípios da casa. Use a **irmã de linguagem** quando há stack definida (ela contém esta base + o detalhe daquela linguagem).
 

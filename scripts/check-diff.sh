@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check-diff.sh — gate determinístico de padrões (§6, §35, §37) sobre o diff.
+# check-diff.sh — gate determinístico de padrões (`padroes-codigo.md`, §35, §37) sobre o diff.
 # Uso: bash scripts/check-diff.sh [base-ref]   (default: origin/main)
 # Sai 1 se achar qualquer violação de PISO; imprime achados com arquivo:linha.
 #
@@ -14,7 +14,7 @@ BASE="${1:-origin/main}"
 FAIL=0
 RED=$'\033[0;31m'; YLW=$'\033[0;33m'; GRN=$'\033[0;32m'; RST=$'\033[0m'
 
-# Arquivos de código alterados (exclui exceções da §6).
+# Arquivos de código alterados (exclui exceções de padroes-codigo.md).
 mapfile -t FILES < <(git diff --name-only "$BASE"...HEAD 2>/dev/null \
   | grep -E '\.(go|rs|ts|tsx|js|mjs|jsx)$' \
   | grep -vE '(_test\.|\.test\.|/migrations/|/generated/|\.gen\.|/mocks?/)' || true)
@@ -24,7 +24,7 @@ warn()  { echo "${YLW}⚠ ATENÇÃO${RST} $1"; }
 
 echo "== schematize-engineering check-diff (base: $BASE) =="
 
-# 1) §6 — tamanho de arquivo em camadas: teto DURO 750 (≤500 útil + ~250 comentário),
+# 1) padroes-codigo.md §1 — tamanho de arquivo em camadas: teto DURO 750 (≤500 útil + ~250 comentário),
 #    FLAG (não bloqueia) em >300 de código útil (~400 em observabilidade).
 useful_lines() { # conta linhas de código útil: exclui branco e linha só-comentário (aprox multi-linguagem)
   grep -vcE '^[[:space:]]*($|//|#|///|/\*|\*/|\*[^/])' "$1" 2>/dev/null || echo 0
@@ -34,13 +34,13 @@ for f in "${FILES[@]}"; do
   [[ -f "$f" ]] || continue
   total=$(wc -l < "$f"); useful=$(useful_lines "$f")
   if (( total > 750 )); then
-    block "$f: $total linhas (>750 teto duro; ~250 são p/ comentário, ~500 úteis) — quebre por coesão (§6)"
+    block "$f: $total linhas (>750 teto duro; ~250 são p/ comentário, ~500 úteis) — quebre por coesão (padroes-codigo.md §1)"
   elif (( useful > 500 )); then
-    block "$f: $useful linhas de código útil (>500 teto duro) — quebre por coesão (§6)"
+    block "$f: $useful linhas de código útil (>500 teto duro) — quebre por coesão (padroes-codigo.md §1)"
   else
     thr=300; ctx=""
     is_observ "$f" && { thr=400; ctx=" [observabilidade infla ~400]"; }
-    (( useful > thr )) && warn "$f: $useful linhas de código útil (>$thr)$ctx — indício de função muito extensa / falta de abstração; FLAG, registre como dívida p/ rever quando prioridades permitirem (§6)"
+    (( useful > thr )) && warn "$f: $useful linhas de código útil (>$thr)$ctx — indício de função muito extensa / falta de abstração; FLAG, registre como dívida p/ rever quando prioridades permitirem (padroes-codigo.md)"
   fi
 done
 

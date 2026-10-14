@@ -59,7 +59,7 @@
 - Validação **completa** do JWT em toda request: assinatura, `exp`, `nbf`, `aud`, `iss` e `alg` contra allowlist. Decodar o payload e confiar é VETADO (§37).
 - Refresh token rotativo com detecção de reuso.
 - RBAC com permissões granulares; ABAC quando necessário.
-- Hash de senha: **bcrypt cost ≥ 12** ou **argon2id**. MD5/SHA1/sem-salt/plaintext são VETADOS (§37).
+- Hash de senha: **argon2id** para senha nova; bcrypt/PBKDF2 só como legado, com rehash no próximo login (`references/iam.md`). MD5/SHA1/sem-salt/plaintext são VETADOS (§37).
 - Tokens, ids de sessão e códigos de reset gerados por **CSPRNG** (`crypto/rand`, `crypto.randomBytes`) — nunca `Math.random()` (§37).
 
 ---

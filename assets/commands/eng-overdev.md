@@ -33,6 +33,9 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
    Cubra: implementação, testes, edge cases, erro/loading/vazio, doc-comment + índice/MAPA
    (§39), DoD (§35), archive (§28). Checklist magro = "terminei" precoce.
 
+0.5 **Briefing** — documento coeso (objetivo + decisões + grafo + plano + checklist + riscos) no
+   archive; é o que o laço abre (`schematize-overdev-context` → `references/briefing.md`).
+
 **Guard de papéis:** o bloqueio de `Edit`/`Write` do agent principal durante o run é especificação **pendente no CLI** — ver `references/overdev.md` §3 ("Guard de papéis"). Até existir, é disciplina sua: o principal despacha e revisa, não edita.
 
 **Só depois da Fase 0:** (a cada item fechado no laço, faça a varredura de ociosos — `orquestracao.md` §9.6: idle com pendência → reuse; depende de outro → mate + enfileire com gatilho de dependência; terminou → mate.)
@@ -52,7 +55,7 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
      pergunta também). Instale: `schematize install`/bootstrap do `schematize-cli`.
 2. **Confirme os hooks:** `schematize overdev enable` registra Stop + PreToolUse no
    `settings.json` (uma vez; inerte sem run). `schematize overdev status` mostra o estado.
-3. **Entre no laço** (`references/overdev.md` §2) — **só com a Fase 0 fechada** (os 4 artefatos da tabela do §0): próximo
+3. **Entre no laço** (`references/overdev.md` §2) — **só com a Fase 0 fechada** (os 5 artefatos da tabela do §0): próximo
    `- [ ]` → **escreve o brief e despacha a um subagent `sonnet`** (o principal NÃO desenvolve) →
    **revisa (diff + roda o gate)** → falhou? **pede correção ao mesmo subagent** (até 2 rodadas →
    re-decompõe → só então `opus`, com motivo registrado) → marca `- [x]` → repete. ≥3 unidades
@@ -96,4 +99,4 @@ Parada manual do usuário: ponha `"mode": "stopped"` no `.schematize/overdev/sta
 Use só quando VOCÊ (usuário) mandar — o agente não se auto-libera por aqui.
 
 > Regra de ouro: no overdev, o **checklist é o juiz**. O agente não decide que terminou —
-> o gate decide. Marcar item sem prova é a mesma macaquice do "terminei" precoce (§6).
+> o gate decide. Marcar item sem prova é a mesma macaquice do "terminei" precoce.

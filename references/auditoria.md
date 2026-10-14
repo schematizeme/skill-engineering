@@ -30,7 +30,7 @@ ficou órfão no histórico*.
 **Fontes que a auditoria varre** (para não repetir a lista aqui: ela é mantida lá) — overdev
 (`CHECKLIST`/`OBJETIVO`/`premature-stops`/perguntas parkeadas/`DECISOES`/`PLAN`), Q.A. plan-first,
 handoffs de contexto em `<projeto>_archive/context/` **e** `chats/`, planos do `/eng-plan`, **ADRs
-`proposed`** em `<projeto>/<projeto>_archive/decisoes/` (caminho único — ADR-0006), e qualquer MD
+`proposed`** em `<projeto>/<projeto>_archive/decisoes/` (caminho único `ADR-NNNN-<slug>.md` em `decisoes/`), e qualquer MD
 do archive com `- [ ]` / `- [~]` / "EM ABERTO".
 
 > **Onde este arquivo divergir da `schematize-audit`, ELA manda.** Aqui só fica o que a base

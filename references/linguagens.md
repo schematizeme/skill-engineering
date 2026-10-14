@@ -9,14 +9,18 @@
 
 **Backend (serviço novo) — escolha uma, com ADR (§27) justificando o fit:**
 
-| Linguagem | Skill | Sufixo de repo |
-|---|---|---|
-| **Go** | `schematize-go` | `_go` |
-| **Rust** | `schematize-rust` | `_rs` |
-| **Elixir** | `schematize-elixir` | `_ex` |
-| **C#** (.NET) | `schematize-csharp` | `_cs` |
-| **Zig** | `schematize-zig` | `_zig` |
-| **Ruby** | `schematize-ruby` | `_rb` |
+| Linguagem | Skill | Sufixo de repo | Prefixo de comando |
+|---|---|---|---|
+| **Go** | `schematize-go` | `_go` | `/go-*` |
+| **Rust** | `schematize-rust` | `_rs` | `/rust-*` |
+| **Elixir** | `schematize-elixir` | `_ex` | `/elixir-*` |
+| **C#** (.NET) | `schematize-csharp` | `_cs` | **`/cs-*`** (não `csharp-`) |
+| **Zig** | `schematize-zig` | `_zig` | `/zig-*` |
+| **Ruby** | `schematize-ruby` | `_rb` | `/ruby-*` |
+
+> O prefixo do comando **não se deriva** do nome da skill nem do sufixo de repo: em C# a skill é
+> `schematize-csharp`, o sufixo é `_cs` e o comando é `/cs-iam` (não `/csharp-iam`). Nenhuma
+> linguagem do rol é "principal" ou "auxiliar": o rol não tem hierarquia.
 
 **Frontend:** **Node** (Next.js principal; Astro e outros consolidados) — governado por
 `schematize-web`. É **só frontend** (o server-side do próprio front — route handlers/server
@@ -27,8 +31,9 @@ actions/BFF — faz parte do frontend).
 - **Node como serviço backend** e **PHP** **não recebem serviço novo.** O que existe é
   **legado**: fica como está até ser tocado, e migra para uma linguagem do rol **por
   funcionalidade do módulo** (~30% afetado → extrai o módulo; ~50% extraído → migra o resto;
-  ajuste pontual não porta). Detalhe da saída em `schematize-node` (Node) e migração sumária
-  (PHP). O ganho marginal de tooling não reabre a porta.
+  ajuste pontual não porta). Detalhe da saída em `schematize-node` (Node); PHP segue a mesma regra
+  — **migra por funcionalidade quando tocado**, sem prazo de "migração sumária". O ganho marginal
+  de tooling não reabre a porta.
 - **Nova linguagem fora do rol** exige **ADR de exceção** aprovado — não se adota por gosto.
 
 ### 2.1 Python — ferramenta, não backend de produto
@@ -56,16 +61,31 @@ implícito é um uso sem piso, e sem piso ele cresce para onde ninguém pretendi
   não é sinônimo de terra sem lei — o `run.py` que a casa distribui é Python, e é código de
   produção do catálogo.
 
+### 2.2 Sancionadas fora do rol de backend
+
+Existem linguagens na casa que **não são do rol de backend** e têm piso próprio, cada uma com skill:
+
+| Linguagem | Skill (comando) | Papel |
+|---|---|---|
+| **C** | `schematize-c` (`/c-*`) | **manutenção defensiva.** Componente novo de sistema nasce em Rust ou Zig; C entra só por ADR de exceção |
+| **C++** | `schematize-cpp` (`/cpp-*`) | idem C: manutenção defensiva; componente novo nasce em Rust/Zig, por ADR |
+| **Swift** | `schematize-swift` (`/swift-*`) | cliente Apple (iOS/iPadOS/macOS), sob a `schematize-mobile` |
+| **Kotlin** | `schematize-kotlin` (`/kotlin-*`) | cliente Android/KMP, sob a `schematize-mobile` |
+| **Dart** | `schematize-dart` (`/dart-*`) | cliente Flutter, sob a `schematize-mobile` |
+| **Shell** | `schematize-shell` (`/shell-*`) | ferramenta: script de ops/instalador/hook; script é código de produção |
+| **Python** | `schematize-python` (`/python-*`) | ferramenta (§2.1): dados/ML, automação — nunca serviço de produto novo |
+
+Nenhuma dessas recebe **serviço backend novo**; o piso comum (§4) vale em todas.
+
 ## 3. Guia de fit — quando usar cada (a decisão vira ADR)
 
-Escolha por **encaixe com o problema**, não por preferência. O default pragmático é Go; o
-default quando o custo de erro é alto é Rust; os demais entram quando o **fit** manda.
+Escolha por **encaixe com o problema**, não por preferência; nenhuma linguagem do rol é
+"padrão" nem hierarquicamente superior. A decisão vira ADR.
 
 - **Go** — serviços de rede/API concorrentes, CLIs, tooling de infra/ops. Simplicidade,
-  deploy de binário estático, concorrência por goroutines/canais. **Default pragmático.**
+  deploy de binário estático, concorrência por goroutines/canais.
 - **Rust** — correção e **segurança de memória** críticas, performance previsível (sem GC),
-  sistemas, componentes sensíveis (auth, cripto, parsing de input hostil), WASM. **Default
-  quando errar é caro.**
+  sistemas, componentes sensíveis (auth, cripto, parsing de input hostil), WASM.
 - **Elixir** — **realtime e alta concorrência** tolerante a falha (BEAM/OTP), sistemas
   distribuídos, messaging/streaming, presença/pub-sub, soft-realtime. Let-it-crash +
   supervisão.
@@ -79,8 +99,13 @@ default quando o custo de erro é alto é Rust; os demais entram quando o **fit*
 
 > Regra de fit: um serviço de auth/cripto pede Rust; um gateway realtime pede Elixir; um
 > job de rede simples pede Go; um utilitário de sistema pede Zig; uma integração .NET pede
-> C#; um script/protótipo pede Ruby. Se dois encaixam, escolha o **default pragmático** (Go)
-> e registre o porquê no ADR.
+> C#; um script/protótipo pede Ruby.
+>
+> **Desempate (a única regra de desempate da casa):** se mais de uma encaixa, vence (1) a que torna
+> **mais barato errar menos** — onde errar é caro (cripto, auth, parsing hostil), Rust; depois (2) a
+> que o time/produto **já opera** (menos ecossistemas para manter); persistindo o empate, escolha
+> a de menor custo operacional e **registre o porquê no ADR**. Skills de linguagem apontam para
+> aqui; não reescrevem esta regra.
 
 ## 4. O que NÃO muda com a linguagem (o piso é comum)
 

@@ -20,7 +20,7 @@
   Nada de "big bang" que fica semanas vermelho. Se travou, `git revert` de um passo é barato.
 - **Escopo-diff (regra do escoteiro).** Melhora o que você **toca**; não sai refatorando o
   repo inteiro de carona. Sem scope creep — o refactor oportunista vira dívida de review.
-- **Sem novo anti-padrão (§37) nem piso quebrado (§6).** O refactor não introduz segredo no
+- **Sem novo anti-padrão (§37) nem piso quebrado (`padroes-codigo.md`).** O refactor não introduz segredo no
   cliente, catch que engole, `any`, arquivo >750, função >300 úteis. Ele **reduz** dívida,
   não troca uma por outra.
 
@@ -37,7 +37,7 @@ tocado, é caminho crítico, ou bloqueia uma mudança) — não por perfeccionis
 Cada um preserva comportamento se feito em passo pequeno com a rede verde:
 
 - **Extract function / module:** tira um bloco coeso pra uma unidade nomeada (mata função
-  gigante e duplicação). Uma-função-por-arquivo quando fizer sentido (§6).
+  gigante e duplicação). Uma-função-por-arquivo quando fizer sentido (`padroes-codigo.md` §2).
 - **Rename:** nome que diz a verdade; propaga em todos os usos (o índice §39 acompanha).
 - **Inline:** o inverso, quando a indireção não paga.
 - **Introduce parameter object / DTO:** agrupa parâmetros que andam juntos.
@@ -63,7 +63,7 @@ Refactor grande (cruza serviços, muda arquitetura) **não** entra no laço dire
 
 - **Mesma suíte de testes verde** antes e depois; **comportamento/contrato idêntico** (diff de
   saída zero — characterization/contract test prova).
-- **Nenhum anti-padrão novo** (§37); arquivos/funções **dentro do piso** (§6); complexidade/
+- **Nenhum anti-padrão novo** (§37); arquivos/funções **dentro do piso** (`padroes-codigo.md`); complexidade/
   duplicação **medida caiu** (não subiu).
 - **Índice/MAPA atualizado** (renome/mover reflete no §39); doc-comments acompanham.
 - **Escopo contido** (só o que foi tocado) e **archive** (§28) com o antes/depois e o motivo.

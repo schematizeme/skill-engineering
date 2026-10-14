@@ -7,7 +7,7 @@ Gere o **handoff de contexto** desta sessão (§34.1, §28) **sem** compactar �
 pra fechar um marco, fim de sessão ou troca de tarefa. Se houver $ARGUMENTS, use
 como foco.
 
-1. Use `${PROJECT_ARCHIVE:-<projeto>/<projeto>_archive/context}` e timestamp `<ts>` = `YYYY-MM-DD-HH-MM-SS`.
+1. Use `${PROJECT_ARCHIVE:-<projeto>/<projeto>_archive/context}` e prefixo `<ts>` = `AAAA-MM-DD-<slug>` (data de hoje + slug curto do foco).
 2. Escreva `<ts>-context.md`: objetivo da sessão, decisões e porquê, componentes/
    arquivos tocados (com caminho), estado atual (funciona / quebrado / pendente),
    threads em aberto, como retomar (comandos/setup/env).
