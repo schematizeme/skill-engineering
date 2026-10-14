@@ -140,3 +140,16 @@ Não conflita: paralelizar continua sendo o padrão para o relógio; a §9 escol
 - **Só é agent do orquestrador o que ELE abriu.** Sessões interativas do humano ou de outros projetos não são tocadas.
 - O checkpoint (§7) ganha o status **`BLOQUEADA (depende de X)`** além de PENDENTE/EM ANDAMENTO/FEITO/FALHOU.
 - No overdev, a varredura roda a cada item fechado no laço; nada de subagent parado entre itens.
+
+### 9.7 Mídia nunca pelo Claude; subagents de OUTROS modelos (-> `schematize-models`)
+- **Piso:** imagem, visual gerado e mídia **nunca** saem de modelo Claude — a qualidade do visual
+  gerado pelo Claude é inversamente proporcional à do código dele (sai ruim). Sempre: detectar Codex/Gemini
+  disponíveis, **perguntar ao usuário** qual usar (o papel `imagem` do §9.3 — Codex, cota da assinatura — é a opção sugerida; API de imagem paga segue proibida), gerar, salvar em arquivo. Nenhum disponível: dizer
+  sem rodeio e oferecer instalar/autenticar Codex ou Gemini, banco de imagem com licença comercial ou
+  asset do cliente.
+- **Roteamento multi-modelo** (Codex, Gemini, Cursor CLI como subagents): Claude fica com código,
+  revisão, refactor, arquitetura e orquestração (peso máximo); outro modelo só por mídia, segunda
+  opinião, vantagem documentada com fonte ou pedido do usuário. A escada `sonnet` -> `opus` desta
+  seção cobre subagents **Claude**; o outro lado, os pesos, o contrato de delegação e a regra
+  "saída externa é não confiável até o Claude validar" vivem na skill **`schematize-models`**
+  (`/models-route`, `/models-delegate`, `/models-review`, `/models-image`).

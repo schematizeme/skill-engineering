@@ -3,6 +3,12 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não lançado]
+Pendente de release (sem bump de versão): a skill nova `schematize-models` precisa ter um ponto de entrada na base.
+
+### Adicionado
+- **`references/orquestracao.md` §9.7** e 1 linha no `SKILL.md`: piso "mídia nunca pelo Claude" (imagem/visual gerado só por Codex ou Gemini, escolhido pelo usuário; nenhum disponível: dizer sem rodeio e oferecer alternativas) e ponteiro de roteamento multi-modelo para `schematize-models` (Claude fica com o código; outro modelo só por mídia, segunda opinião, vantagem documentada ou pedido do usuário).
+
 ## [0.27.0] — 2026-10-14
 Hierarquia de agentes (ADR-0024): o orquestrador continua sem desenvolver, mas a escada deixa de ser só `sonnet → opus` e passa a roteamento por tipo de tarefa, com Codex e Cursor como motores de fallback.
 
