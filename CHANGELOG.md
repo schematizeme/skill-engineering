@@ -10,6 +10,7 @@ A skill nova `schematize-models` precisa ter um ponto de entrada na base.
 - **`references/orquestracao.md` §9.7** e 1 linha no `SKILL.md`: piso "mídia nunca pelo Claude" (imagem/visual gerado só por Codex ou Gemini, escolhido pelo usuário; nenhum disponível: dizer sem rodeio e oferecer alternativas) e ponteiro de roteamento multi-modelo para `schematize-models` (Claude fica com o código; outro modelo só por mídia, segunda opinião, vantagem documentada ou pedido do usuário).
 
 ### Alterado
+- Description reduzida (≤235 chars) para caber no orçamento de listagem de skills (soma ≤8300); mesmo território, fronteiras com as irmãs preservadas.
 - `references/observabilidade.md` §16 e §17 viram **ponteiros** para a nova skill `schematize-observability` (dona do tema: padrão OpenTelemetry, cardinalidade, amostragem, burn-rate, stack, ambientes), preservando os headings §16.1 a §16.6, §17, §30 e §33 (outras skills os citam) e os pisos da base; §16.6 ganha "auditoria não é log de debug".
 
 ### Alterado
