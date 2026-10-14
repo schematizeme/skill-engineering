@@ -52,7 +52,7 @@ quase toda dúvida de "onde está escrito o quê":
    - **Efeito externo** nunca sai de não-produção (`schematize-engineering` →
      `references/efeitos-externos.md`).
    - **Orquestração** (`schematize-engineering` → `references/orquestracao.md` §9): o principal não
-     desenvolve; subagents `sonnet` por padrão, `opus` só após falha.
+     desenvolve (é Claude Opus); executor mais barato que resolve — `haiku`/`sonnet` → Codex Terra → Cursor → `opus` só após falha; visual direto ao Codex; imagem via Codex Terra, nunca API paga.
 3. **QA, ops, IAM e índice não têm comando próprio aqui:** vêm da base `/eng-*`. Para trabalho
    contínuo use `/eng-overdev`; para planejar `/eng-plan`; para varrer a base `/eng-scan`; para
    revisão geral `/eng-review` (e `/eng-ops`, `/eng-iam`, `/eng-index`). Os comandos
@@ -75,7 +75,7 @@ quase toda dúvida de "onde está escrito o quê":
    - **Efeito externo** nunca sai de não-produção (`schematize-engineering` →
      `references/efeitos-externos.md`).
    - **Orquestração** (`schematize-engineering` → `references/orquestracao.md` §9): o principal não
-     desenvolve; subagents `sonnet` por padrão, `opus` só após falha.
+     desenvolve (é Claude Opus); executor mais barato que resolve — `haiku`/`sonnet` → Codex Terra → Cursor → `opus` só após falha; visual direto ao Codex; imagem via Codex Terra, nunca API paga.
 3. **Delegado à `schematize-mobile`, por nome:** IAM mobile (public client OIDC/PKCE, passkeys,
    Keychain/Keystore), ops, offline/sync, push, testes no device e entrega nas lojas
    (`schematize-mobile` → `references/testes-mobile.md`, `schematize-mobile` →

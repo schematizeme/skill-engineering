@@ -1,6 +1,6 @@
 # Orquestração & paralelização — tempo do usuário acima de tokens
 
-> **Papéis e modelo (§9):** o orquestrador (agent principal) **não desenvolve** — planeja, despacha e revisa; quem executa é subagent em **`sonnet` por padrão**, com escada de correção até `opus` só após falha.
+> **Papéis e motor (§9):** o orquestrador (agent principal, **Claude Opus**) **não desenvolve** — planeja, despacha e revisa; quem executa é o **executor mais barato que resolve**: `haiku` (mecânico) ou `sonnet` (código), com escada **Sonnet → Codex `gpt-5.6-terra` → Cursor → subagent Opus → park**. Visual e imagem vão direto ao Codex (§9.3).
 >
 > Piso de **execução**: quando uma tarefa se divide em partes independentes, o padrão da casa é **decompor em mini-tasks e paralelizar com múltiplos subagents**, não fazer serial. O gargalo que otimizamos é o **relógio do usuário (wall-clock)**, não o orçamento de tokens. Preferimos gastar mais tokens e entregar em minutos a economizar tokens e levar horas. O que é vetado é o oposto: gastar 10× o tempo resolvendo serialmente algo que paralelizava.
 
@@ -55,7 +55,7 @@
 
 Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda morre no meio. **O estado nunca vive só nos eventos.** A verdade do fan-out mora num **MD de checkpoint** no archive, escrito **antes** de qualquer agent rodar e atualizado a cada onda — assim, se tudo cair, você **retoma lendo o MD**, sem refazer o que já ficou pronto.
 
-1. **Antes de disparar a onda 1** (acima do limiar), grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU / BLOQUEADA (depende de X)) · modelo (sonnet/opus) · rodadas de correção · resultado (caminho)` (§9.4).
+1. **Antes de disparar a onda 1** (acima do limiar), grave o plano+checkpoint em **`<projeto>/<projeto>_archive/orchestration/<YYYY-MM-DD-HH-MM-SS>-<tarefa>.md`**: o contrato, a lista de unidades e uma **tabela de status** por unidade — colunas `unidade · status (PENDENTE / EM ANDAMENTO / FEITO / FALHOU / BLOQUEADA (depende de X)) · motor · modelo (ex.: claude/haiku, claude/sonnet, codex/gpt-5.6-terra, cursor/auto, claude/opus) · rodadas de correção · resultado (caminho)` (§9.4).
 2. **Cada subagent grava o próprio resultado** num `.md` no archive (não só retorna pelo evento) — `…/orchestration/<tarefa>/<unidade>.md` com o que fez, arquivos tocados e o pronto/erro. Resultado que só existe no evento **não existe**.
 3. **A cada onda que fecha**, o orquestrador **atualiza a tabela de status** no MD de checkpoint. O MD é sempre o retrato atual. Em seguida faça a **varredura de ociosos** (§9.6): nenhum agent fica parado esperando.
 4. **Retomada:** se a sessão cai, o próximo passo é **ler o checkpoint** e disparar só as unidades `PENDENTE/FALHOU` — nunca recomeçar do zero. Sem retry infinito; unidade que esgota a escada de modelo (§9.3) vira gate humano.
@@ -68,33 +68,65 @@ Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda 
 - **Archive.** Plano, checkpoint e resultado consolidado entram no archive (§28) — em `<projeto>/<projeto>_archive/orchestration/`, nunca no root — como qualquer entrega.
 - **Contexto.** Ondas longas seguem a gestão de contexto (`references/contexto-claude-code.md`): handoff antes de compactar.
 
-> Regra de bolso: **se dá pra dividir sem colidir, divida e paralelize — em subagents `sonnet`; o orquestrador não desenvolve, revisa.** O usuário paga o relógio, não o token; entre executores que entregam no mesmo tempo, o mais barato vence (§9). Mas paralelizar exige o mesmo rigor de sempre — contrato fixado, escrita isolada, **checkpoint em MD**, verificação única. Fan-out sem plano (ou sem checkpoint durável) é desperdício rápido, não entrega rápida.
+> Regra de bolso: **se dá pra dividir sem colidir, divida e paralelize — no executor mais barato que resolve (`haiku`/`sonnet`); o orquestrador não desenvolve, revisa.** O usuário paga o relógio, não o token; entre executores que entregam no mesmo tempo, o mais barato vence (§9). Mas paralelizar exige o mesmo rigor de sempre — contrato fixado, escrita isolada, **checkpoint em MD**, verificação única. Fan-out sem plano (ou sem checkpoint durável) é desperdício rápido, não entrega rápida.
 
-## 9. Papéis e escada de modelo (custo)
+## 9. Papéis, motores e escada (custo)
 
 > Piso de **custo**: **orquestrador não desenvolve; subagent barato executa.** A §1 escolhe *paralelizar pelo relógio*; esta seção escolhe *quem executa e com qual modelo*. Vale mesmo para <3 unidades.
 
 ### 9.1 Papéis
-- **Agent principal (orquestrador)** = o que conversa com o humano. Roda no **modelo padrão da sessão** (não se força modelo nele). **NÃO desenvolve**: não escreve código de produto, não edita arquivo de entrega, não roda a implementação. Faz só: entender, **planejar/decompor**, escrever o **brief/contrato**, **despachar**, **supervisionar**, **revisar** (ler diff, rodar gate/teste, conferir contra o critério de pronto), **integrar** e falar com o humano.
+- **Agent principal (orquestrador)** = o que conversa com o humano. É **Claude Opus** (papel `principal` do `agentes.toml`, §9.3) e **não delega a ele mesmo**. **NÃO desenvolve**: não escreve código de produto, não edita arquivo de entrega, não roda a implementação. Faz só: entender, **planejar/decompor**, escrever o **brief/contrato**, **despachar**, **supervisionar**, **revisar** (ler diff, rodar gate/teste, conferir contra o critério de pronto), **integrar** e falar com o humano.
 - **Subagent (executor)** = faz a task. Brief autossuficiente (§4, passo 3), escopo fechado, critério de pronto, grava resultado no archive (§7).
 - **Exceção estreita e declarada:** correção **trivial** de integração (1–2 linhas, ex.: conflito de import entre duas entregas) quando despachar custaria mais que fazer — registrada no checkpoint como "correção do orquestrador". Nunca vira hábito; na dúvida, despacha.
 
 ### 9.2 Ação onerosa → micro-funções baratas
 - **Onerosa** = qualquer task que leria/escreveria muitos arquivos, geraria muito código, varreria a base, ou que um modelo caro levaria vários passos para fechar. Antes de executar, **decompor em micro-tasks** (idealmente = micro-funções da §39: uma função/unidade por task, com assinatura, doc-comment e teste definidos no brief) pequenas o bastante para um **modelo mais barato** acertar de primeira.
 - Isto vale **mesmo quando <3 unidades**: a regra de fan-out (§2) decide *paralelizar ou não*; a §9 decide *quem executa* — sempre um subagent. Unidades acopladas rodam **em série** por subagents, não inline no principal.
-- **Micro-task boa:** entrada/saída explícitas, arquivos-alvo nomeados, contrato fixado, prova (teste/comando) definida. Se o Sonnet precisa "decidir arquitetura", a task não está micro o bastante — o desenho é do orquestrador.
+- **Micro-task boa:** entrada/saída explícitas, arquivos-alvo nomeados, contrato fixado, prova (teste/comando) definida. Se o executor precisa "decidir arquitetura", a task não está micro o bastante — o desenho é do orquestrador.
 
-### 9.3 Escada de modelo (default Sonnet)
-1. **Default: `sonnet`** em todo subagent (no Claude Code: `model: "sonnet"` no Agent tool; em workflow, `model: 'sonnet'`). Explore/pesquisa simples podem ir em `haiku` quando é só localizar.
-2. **Falhou → devolve ao MESMO subagent primeiro** (SendMessage/continuação, com o erro concreto do gate/review e o que mudar). Até **2 rodadas** de correção no Sonnet.
-3. **Ainda falhou → re-decompor** (task grande demais? brief pobre?) e redespachar em Sonnet.
-4. **Só então sobe para `opus`**, registrando no checkpoint o **motivo da escalada** (o que o Sonnet não conseguiu). Opus é exceção justificada, não default.
-5. **Falhou em Opus 2× → gate humano** (no overdev: `park` + `- [~]`, não pergunta bloqueante).
+### 9.3 Hierarquia de agentes: roteamento e escada
+**Princípio:** escalar **só quando o mais barato falhar**. Claude é forte em código e fraco em visual.
+
+**Roteamento por tipo de tarefa**
+| Tipo | Vai para | Observação |
+|---|---|---|
+| Muito simples / mecânica (localizar, renomear, editar 1–2 linhas, pesquisa simples) | **Haiku** (papel `trivial`) | mais rápido, ~1/100 do custo do Opus |
+| **Código** (padrão de toda micro-task) | **Sonnet** (papel `executor`) → escada abaixo | |
+| **Visual** (UI, layout, CSS, tema, ícone, regressão visual) | **Codex `gpt-5.6-terra` direto** (papel `visual`) | não passa pelo Sonnet |
+| **Imagem** (gerar/editar) | **pedir ao Codex Terra** (papel `imagem`, cota da assinatura) | **PROIBIDO** endpoint/API de imagem pago |
+| 2ª opinião, revisão, testes, docs | Sonnet (papel `complementar`) | |
+
+**Escada de código** (cada degrau só se o anterior falhou):
+1. **Sonnet** (`executor`). Falhou → devolve ao **MESMO subagent** (SendMessage, com o erro concreto do gate/review). Até **2 rodadas** de correção.
+2. **Codex `gpt-5.6-terra`** (`fallback-1`).
+3. **Cursor** (`fallback-cursor`, `cursor-agent`) — **pulado com aviso** se não estiver instalado/logado.
+4. **Subagent Opus** (`fallback-2`) — exceção justificada, com o **motivo da escalada** (o que os anteriores não conseguiram) no checkpoint.
+5. Esgotou → **`park` + `- [~]`** (no overdev, nunca pergunta bloqueante). Antes de subir de degrau, considere **re-decompor** (task grande demais? brief pobre?).
+
+**Configurável:** a estrutura vive em `agentes.toml` — global em `~/.claude/schematize/agentes.toml`, com override por projeto em `<projeto>/.schematize/overdev/agentes.toml` (o projeto sobrescreve por papel; `escada`/`roteamento` inteiros se presentes) — e na aba **"Agentes"** da GUI do overdev. Ausente → defaults abaixo. Papéis extras do usuário são permitidos.
+
+| Papel | Motor / modelo (default) | Para quê |
+|---|---|---|
+| `principal` | claude / opus | orquestra: planeja, decompõe, despacha, revisa; **não** gera código de entrega |
+| `trivial` | claude / haiku | tarefa muito simples/mecânica |
+| `executor` | claude / sonnet | micro-task de código; até 2 rodadas de correção |
+| `fallback-1` | codex / gpt-5.6-terra | executor falhou 2 rodadas |
+| `fallback-cursor` | cursor / auto | Codex falhou (se `cursor-agent` instalado) |
+| `fallback-2` | claude / opus | último recurso (subagent Opus) |
+| `visual` | codex / gpt-5.6-terra | UI/layout/CSS/tema/ícone |
+| `imagem` | codex / gpt-5.6-terra | imagem via cota da assinatura (sem API paga) |
+| `complementar` | claude / sonnet | 2ª opinião, revisão, testes, docs |
+
+**Como chamar**
+- **Claude** (`principal`/`trivial`/`executor`/`fallback-2`/`complementar`): subagent via **Agent tool** com `model: "haiku"|"sonnet"|"opus"` (em workflow, `model: '...'`).
+- **Codex/Cursor:** `schematize-overdev delegar --papel <p> --brief-stdin --json` (brief no stdin; grava em `.schematize/overdev/delegacoes/`). **rc 3 = indisponível** (motor ausente, sem login ou papel inativo) → não invente: use o `proximo` do JSON (`delegar --listar` mostra papéis e disponibilidade). rc 2 = config inválida; rc 4 = motor falhou (conta como falha do degrau).
+- **Fallback sem o overdev instalado:** `codex exec -m gpt-5.6-terra -s workspace-write --json -C <dir> "<brief>"`.
+- O principal **revisa** toda entrega, venha do motor que vier (§9.4).
 
 ### 9.4 Supervisão e revisão (o principal é o revisor)
 - Toda entrega de subagent é **revisada pelo principal** antes de contar como feita: ler o diff, rodar o gate/teste do item, conferir o critério de pronto e os pisos (DoD §35, anti-padrões §37).
 - Achou problema → **pede ao subagent que corrija** (com o achado concreto). O principal **só corrige com a própria mão se necessário** (exceção 9.1) — nunca reescreve por preferência.
-- O checkpoint (§7) ganha colunas **modelo** (`sonnet`/`opus`) e **rodadas de correção** por unidade.
+- O checkpoint (§7) ganha colunas **motor** (`claude`/`codex`/`cursor`), **modelo** e **rodadas de correção** por unidade.
 
 ### 9.5 Relação com §1 (tempo > tokens)
 Não conflita: paralelizar continua sendo o padrão para o relógio; a §9 escolhe o **executor mais barato que resolve**. Tempo do usuário > tokens; entre dois executores que entregam no mesmo tempo, o mais barato vence.
@@ -103,7 +135,7 @@ Não conflita: paralelizar continua sendo o padrão para o relógio; a §9 escol
 - **Agent parado é custo:** polui a tela do humano e segura recurso (RAM/slots do governador de concorrência). O orquestrador **não mantém vários subagents idle ao mesmo tempo**.
 - **Varredura de ociosos** — a cada onda que fecha, a cada notificação de conclusão e antes de despachar a próxima onda, o orquestrador lista os agents (no Claude Code: `ListAgents`) e classifica cada idle:
   1. **Tem pendência executável agora** → **põe pra trabalhar** (SendMessage com a próxima micro-task/correção; aproveita o contexto quente, §4 passo 6).
-  2. **Pendência depende de outro agent/unidade ainda não pronta** → **mata o agent** (`TaskStop`) e **enfileira a task** no checkpoint (§7) com **gatilho de dependência** explícito (`depende_de: <unidade>` / status `BLOQUEADA`); quando a dependência fechar, **abre um agent novo** (sonnet) com o brief. Nunca deixar agent vivo "esperando" outro.
+  2. **Pendência depende de outro agent/unidade ainda não pronta** → **mata o agent** (`TaskStop`) e **enfileira a task** no checkpoint (§7) com **gatilho de dependência** explícito (`depende_de: <unidade>` / status `BLOQUEADA`); quando a dependência fechar, **abre um agent novo** (do papel/motor adequado) com o brief. Nunca deixar agent vivo "esperando" outro.
   3. **Terminou** (entrega revisada e aceita, nada mais pra ele) → **mata** (`TaskStop`). O resultado já está no archive (§7); o agent não é memória.
 - **Só é agent do orquestrador o que ELE abriu.** Sessões interativas do humano ou de outros projetos não são tocadas.
 - O checkpoint (§7) ganha o status **`BLOQUEADA (depende de X)`** além de PENDENTE/EM ANDAMENTO/FEITO/FALHOU.

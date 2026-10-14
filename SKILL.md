@@ -1,7 +1,7 @@
 ---
 name: schematize-engineering
 metadata:
-  version: 0.26.0
+  version: 0.27.0
 description: >-
   Base normativa de engenharia, agnóstica de linguagem. Use ao projetar, revisar ou refatorar software, escolher
   stack do rol (Go/Rust/Elixir/C#/Zig/Ruby, fit + ADR), modelar eventos/banco, definir observabilidade,
@@ -32,7 +32,7 @@ Digite `/eng-help` pra ver todos. Em resumo:
 | `/eng-refactor` | **refactor disciplinado**: muda a forma sem mudar o comportamento, rede de testes ANTES (red-first), passos pequenos reversíveis, escopo-diff; gate exige mesma suíte verde + contrato idêntico |
 | `/eng-audit` | **auditoria de histórico**: enumera todos os checklists (overdev/QA/handoff/plano/ADR/perguntas) e verifica se foram **sanados** — acha órfãos RED e trava se sobrar item aberto/sem prova |
 | `/eng-index` | (re)gera o índice de microfunções (§39) a partir dos doc-comments |
-| `/eng-orchestrate` | decompõe a tarefa em mini-tasks independentes e paraleliza com subagents (plan-first) — otimiza tempo sobre tokens; papéis (orquestrador só planeja/revisa) e escada de modelo sonnet→opus |
+| `/eng-orchestrate` | decompõe a tarefa em mini-tasks independentes e paraleliza com subagents (plan-first) — otimiza tempo sobre tokens; papéis (orquestrador só planeja/revisa) e hierarquia de agentes (principal Opus; haiku/sonnet → Codex Terra → Cursor → opus; visual direto ao Codex) |
 | `/eng-overdev` | modo contínuo: força um checklist exaustivo e **não deixa parar** (Stop hook rejeita) até tudo `- [x]` e o gate passar — anti "entreguei micro-função e disse que terminei" |
 | `/eng-ops` | audita/scaffolda o `<projeto>_ops` (interface única): fluxo de ambientes, instalação paralela (`nproc`), independência |
 | `/eng-iam` | força/audita/scaffolda o IAM (identidade≠email, ≥2 fatores, ReBAC multi-tenant, sessão longa/logout irreversível) como app separado em `auth.<domain>`, ou porta um auth legado |
@@ -63,7 +63,7 @@ Mapa de references — leia o que casa com a tarefa:
 | **EFEITOS EXTERNOS fora de prd (e-mail/SMS/push/webhook/pagamento): sink por default, domínio de teste em ROTA NULA (null MX + SPF `-all` + DMARC reject), guard deny-by-default no provider, cap por execução, 4 camadas** | `references/efeitos-externos.md` |
 | Templates, feature flags, IA assistida, DoD, evolução, índice de funcionalidades (§29+) | `references/entrega.md` |
 | Filosofia, aplicação universal e a lista completa de anti-padrões vetados | `references/anti-padroes.md` |
-| **Orquestração & paralelização: decompor em mini-tasks e paralelizar com subagents (tempo > tokens), fan-out 8/teto 25, isolamento, gather; papéis (orquestrador não desenvolve) + escada de modelo sonnet→opus (§9)** | `references/orquestracao.md` |
+| **Orquestração & paralelização: decompor em mini-tasks e paralelizar com subagents (tempo > tokens), fan-out 8/teto 25, isolamento, gather; papéis (orquestrador não desenvolve) + hierarquia de agentes (principal Opus; haiku/sonnet → Codex Terra → Cursor → opus; visual direto ao Codex) (§9)** | `references/orquestracao.md` |
 | **OVERDEV — desenvolvimento contínuo até o checklist fechar (Stop hook rejeita parada prematura; só termina 100% verificado)** | `references/overdev.md` |
 | **SCAN de problemas — varredura ampla da base (todas as classes: correção, §37, pisos de código, duplicação/morto, testes, concorrência, dados, supply chain, dívida, deriva de índice), exaustiva + fan-out, achado com arquivo:linha+conserto** | `references/scan.md` |
 | **PLANEJAMENTO extensivo — plan-first: entender→escopo→spikes→decompor no grafo→risco→ADR→paralelizar→fases; plano no archive, deriva checklist, pede aprovação** | `references/planejamento.md` |
@@ -87,7 +87,7 @@ Estes nunca são violados, nem "pra funcionar", nem "pra ir mais rápido". A lis
 - **Pisos de código:** arquivo ≤ 750 linhas (flag em > 300 úteis), uma função por arquivo, toda função com doc-comment, `MAPA.md` e índice de microfunções no archive, todo MD gerado no archive e nunca no root. Detalhe em `references/padroes-codigo.md` e `references/operacao.md` (§28, §39).
 - **Backend novo no rol sancionado (Go, Rust, Elixir, C#, Zig, Ruby), por fit + ADR**, sem hierarquia entre elas; frontend é Node (só front); Node-backend e PHP estão em saída (sem serviço novo; legado migra por funcionalidade quando tocado). Piso igual em toda linguagem. Escolha, desempate e linguagens fora do rol: `references/linguagens.md`; saída: `references/arquitetura.md` (§3).
 - **Tempo do usuário acima de tokens.** Tarefa com ≥3 unidades independentes e não-triviais é decomposta e paralelizada com subagents (fan-out 8/onda, teto 25), plan-first; trabalho acoplado ou pequeno é inline. Detalhe em `references/orquestracao.md`.
-- **Orquestrador não desenvolve; subagent barato executa.** O principal só planeja, despacha, supervisiona e revisa; subagents em `sonnet` por padrão, `opus` só após a escada de correção, com motivo registrado; sem frota ociosa. Detalhe em `references/orquestracao.md` (§9, §9.6).
+- **Orquestrador não desenvolve; subagent barato executa.** O principal só planeja, despacha, supervisiona e revisa; principal = Claude Opus; executor mais barato que resolve (`haiku` mecânico, `sonnet` código → Codex `gpt-5.6-terra` → Cursor → subagent `opus` com motivo → `park`); visual direto ao Codex; imagem pedida ao Codex Terra (API de imagem paga proibida); papéis em `agentes.toml`; sem frota ociosa. Detalhe em `references/orquestracao.md` (§9, §9.6).
 - **Fluxo de ambientes e ops.** dev local → teste local → GitHub → hml → prd; VETADO editar direto no servidor; 100% das operações pelo `<projeto>_ops`, instalação paralela (`nproc`), independência dos serviços como invariante. Detalhe em `references/ops.md`.
 - **Deploy destrutivo por seed + um user Linux por serviço.** Redeploy recria a app a partir do seed (`/<app>/.env`) preservando os dados; cada serviço em systemd hardened. Detalhe em `references/ops.md` (§2–§3).
 - **IAM por desenho.** Auth como app SEPARADA (`auth.<domain>`), ID imutável (email nunca é ID), ≥2 fatores, ReBAC multi-tenant deny-default, sessão longa e logout irreversível; migrar auth legado é prioridade 0. Detalhe em `references/iam.md`; scaffold/auditoria por `/eng-iam`.

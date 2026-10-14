@@ -25,8 +25,8 @@ plano raso, retrabalho e "reabrir o que já foi combinado". A Fase 0 é **obriga
 |---|---|---|---|
 | 0.1 | `DECISOES.md` | as decisões **já acordadas** no contexto, em ADR-lite: *decisão · motivo · alternativa descartada · origem*. O que ficou ambíguo **não vira decisão**: vira `- [~]` on-hold | `.schematize/overdev/` + espelho no archive |
 | 0.2 | grafo carregado | o **MAPA/índice §39** lido (`/eng-index`); cada item do plano aponta o(s) **nó** que toca e as **arestas** afetadas. Sem índice, **gerá-lo é o 1º item** | `<projeto>_archive/index/` |
-| 0.3 | `PLAN.md` **pesado** | escopo (entra / **NÃO** entra), decomposição em itens **verificáveis** e do tamanho de **uma micro-task de Sonnet** (nó do grafo + **prova** + dependências + risco + executor `[sonnet]`/`[opus: <motivo>]`), ordem topológica, paralelismo (≥3 unidades independentes → `/eng-orchestrate`), riscos, DoD (§35) | `.schematize/overdev/` |
-| 0.4 | `CHECKLIST.md` | **derivado do plano**, exaustivo por contagem, 1 item por linha, cada um com **como provar**, nas 3 classes `- [ ]` · `- [H ]` · `- [~]`. Itens **dimensionados como micro-task de Sonnet** (§2 / `orquestracao.md` §9.2), cada um com a tag de executor `[sonnet]` (default) ou `[opus: <motivo>]` | `.schematize/overdev/` |
+| 0.3 | `PLAN.md` **pesado** | escopo (entra / **NÃO** entra), decomposição em itens **verificáveis** e do tamanho de **uma micro-task de executor barato** (nó do grafo + **prova** + dependências + risco + executor `[haiku]`/`[sonnet]`/`[codex]`/`[cursor]`/`[opus: <motivo>]`), ordem topológica, paralelismo (≥3 unidades independentes → `/eng-orchestrate`), riscos, DoD (§35) | `.schematize/overdev/` |
+| 0.4 | `CHECKLIST.md` | **derivado do plano**, exaustivo por contagem, 1 item por linha, cada um com **como provar**, nas 3 classes `- [ ]` · `- [H ]` · `- [~]`. Itens **dimensionados como micro-task de executor barato** (§2 / `orquestracao.md` §9.2), cada um com a tag de executor `[sonnet]` (default código), `[haiku]` (mecânico), `[codex]` (visual/imagem/fallback), `[cursor]` ou `[opus: <motivo>]` | `.schematize/overdev/` |
 | 0.5 | briefing | documento coeso que amarra objetivo + decisões + grafo + plano + checklist + riscos; é o que o overdev abre ao entrar no laço (`schematize-overdev-context` → `references/briefing.md`) | `<projeto>_archive/overdev/` |
 
 **Gate da Fase 0 (linhas 0.1–0.5 da tabela):** só entra no laço (§2) com os cinco prontos. Começar a tickar sem a fundação é a
@@ -48,7 +48,7 @@ dela, **ela manda** no *como*; aqui manda o *o quê* (o gate acima).
 
 ## 2. O laço (sem parar) — começa DEPOIS da Fase 0
 Fechada a fundação (§0), tickeia **item a item**. Enquanto houver item aberto: pega o
-**próximo `- [ ]`** → **escreve o brief (micro-task)** → **despacha a um subagent** (`sonnet`) que
+**próximo `- [ ]`** → **escreve o brief (micro-task)** → **despacha ao agente do papel adequado** (default subagent `sonnet`) que
 implementa **de verdade** → **revisa** (diff + roda o teste/gate do item) → se falhou, **pede a
 correção ao mesmo subagent** com o achado concreto → só então marca `- [x]` → repete. Do critério
 mais barato ao mais caro.
@@ -58,11 +58,14 @@ mais barato ao mais caro.
   sessão, o que fala com o humano) só pega o item, escreve o brief, despacha, revisa com gate,
   pede correção e tickeia. Só corrige com a própria mão a exceção estreita da §9.1 (1–2 linhas
   de integração), registrada.
-- **Escada de modelo:** `sonnet` por padrão → falhou, o **mesmo subagent corrige** (até 2
-  rodadas) → re-decompõe o item → só então **`opus`**, com **motivo da escalada** registrado.
-  Esgotou Opus (2×) → `park` + `- [~]` (§4).
-- Cada item do CHECKLIST carrega a tag de executor: **`[sonnet]`** (default) ou
-  **`[opus: <motivo>]`**. Escalada e rodadas de correção ficam no checkpoint/archive do overdev
+- **Hierarquia de agentes** (`orquestracao.md` §9.3; papéis em `agentes.toml`): mecânico → `haiku`;
+  código → `sonnet` → falhou, o **mesmo subagent corrige** (até 2 rodadas) → **Codex
+  `gpt-5.6-terra`** → **Cursor** (se instalado) → **subagent `opus`**, com **motivo da escalada**
+  registrado → esgotou → `park` + `- [~]` (§4). **Visual (UI/CSS/tema/ícone) vai direto ao Codex;
+  imagem é pedida ao Codex Terra (PROIBIDO API de imagem paga).** Codex/Cursor via
+  `schematize-overdev delegar --papel <p> --brief-stdin --json` (rc 3 → `proximo`).
+- Cada item do CHECKLIST carrega a tag de executor: **`[sonnet]`** (default código), `[haiku]`,
+  `[codex]`, `[cursor]` ou **`[opus: <motivo>]`**. Escalada e rodadas de correção ficam no checkpoint/archive do overdev
   (`<projeto>_archive/overdev/`, e `orchestration/` quando há fan-out). Unidades independentes (≥3) vão pra **fan-out de subagents**
 (`references/orquestracao.md`) — paralelismo acelera, não autoriza fechar item sem prova.
 
@@ -84,9 +87,9 @@ mais barato ao mais caro.
 ### Guard de papéis (a implementar no motor `schematize`) — ESPECIFICAÇÃO, PENDENTE NO CLI
 > **Não existe ainda.** Hoje "o principal não desenvolve" (`orquestracao.md` §9.1) e "sem frota ociosa" (§9.6) são só texto normativo; esta subseção é o contrato que o CLI deve cumprir.
 - **Hook `PreToolUse`** do motor, ativo só com run overdev ativo (`mode=active`): **bloqueia `Edit`/`Write`/`NotebookEdit` vindos do agent principal**. Subagents ficam liberados — o hook distingue pelo contexto do agent (payload do hook). **Exceção declarada:** arquivos de control-plane `.schematize/overdev/*` e o archive do run (`<projeto>/<projeto>_archive/…`).
-- **Mensagem de bloqueio acionável:** "Overdev ativo: o agent principal não edita código. Despache um subagent sonnet com o brief (escopo, critério de pronto, onde gravar o resultado)." Cada bloqueio é registrado no archive do run.
+- **Mensagem de bloqueio acionável:** "Overdev ativo: o agent principal não edita código. Despache ao agente do papel adequado (subagent sonnet por padrão) com o brief (escopo, critério de pronto, onde gravar o resultado)." Cada bloqueio é registrado no archive do run.
 - **Hook `SubagentStop`:** registra a conclusão (unidade, modelo, resultado) e injeta o lembrete da varredura de ociosos (`orquestracao.md` §9.6).
-- **`schematize overdev status`:** passa a contar as tags `[sonnet]` / `[opus: motivo]` do CHECKLIST e mostrar a **taxa de escalada** (opus ÷ total); taxa alta = brief ruim ou decomposição grossa, investigar.
+- **`schematize overdev status`:** passa a contar as tags de executor (`[haiku]`/`[sonnet]`/`[codex]`/`[cursor]`/`[opus: motivo]`) do CHECKLIST e mostrar a **taxa de escalada** (opus ÷ total); taxa alta = brief ruim ou decomposição grossa, investigar.
 
 ## 4. NÃO trave pra perguntar — parkeia e segue (regra central)
 A ideia do overdev é **por pra rodar e sair** (comer/dormir/viver). Então, **VETADO parar
@@ -101,8 +104,8 @@ Ao topar uma dúvida (mesmo que pareça bloqueante):
    "<pergunta>"` faz os dois (registra + marca).
 3. **SIGA para os outros itens.** O `- [~]` não impede você de avançar nos demais, mas **conta como aberto** no hook: o run só termina quando ele for resolvido (vira `- [x]`) ou declarado em `.schematize/overdev/BLOCKED` (§4.1).
 
-**Escalar para Opus não é pergunta** (§2): o principal sobe o modelo do subagent sozinho, com o motivo
-registrado, sem parar nem consultar o humano. Só **esgotou Opus** (falhou 2×) vira `park`.
+**Escalar para Opus não é pergunta** (§2): o principal sobe o degrau da escada sozinho, com o motivo
+registrado, sem parar nem consultar o humano. Só **esgotou a escada** (Opus falhou 2×) vira `park`.
 
 Assuma um **default razoável e documente-o** em vez de perguntar, sempre que o custo de
 errar for reversível. Só parkeia o que for de fato irreversível/ambíguo demais.

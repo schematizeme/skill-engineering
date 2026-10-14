@@ -3,6 +3,17 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.27.0] — 2026-10-14
+Hierarquia de agentes (ADR-0024): o orquestrador continua sem desenvolver, mas a escada deixa de ser só `sonnet → opus` e passa a roteamento por tipo de tarefa, com Codex e Cursor como motores de fallback.
+
+### Alterado
+- **`references/orquestracao.md` §9** (e `herdados/orquestracao.md`, `CLAUDE.md` item 19, `precedencia.md`, `SKILL.md`, `overdev.md`, `eng-overdev.md`, `eng-orchestrate.md`): principal = **Claude Opus** (só orquestra); mecânico → **Haiku** (~1/100 do custo do Opus); código → **Sonnet** (até 2 rodadas pelo mesmo subagent) → **Codex `gpt-5.6-terra`** → **Cursor** (`cursor-agent`, se instalado) → **subagent Opus** (motivo no checkpoint) → `park`/`- [~]`; escala só quando o mais barato falhar.
+- **Visual** (UI/layout/CSS/tema/ícone) vai **direto ao Codex**; **imagem** é pedida ao Codex Terra (cota da assinatura) — **API/endpoint de imagem pago PROIBIDO**.
+- Checkpoint (§7/§9.4) ganha a coluna **motor** além de **modelo**; tags de executor do overdev: `[haiku]`/`[sonnet]`/`[codex]`/`[cursor]`/`[opus: <motivo>]`.
+
+### Adicionado
+- §9.3: tabela de roteamento, tabela de papéis default (`principal`, `trivial`, `executor`, `fallback-1`, `fallback-cursor`, `fallback-2`, `visual`, `imagem`, `complementar`), configuração em `agentes.toml` (global `~/.claude/schematize/agentes.toml` + override por projeto) e na aba "Agentes" do overdev, e como chamar: Agent tool com `model`; `schematize-overdev delegar --papel <p> --brief-stdin --json` (rc 3 = indisponível → `proximo`); sem overdev: `codex exec -m gpt-5.6-terra -s workspace-write --json -C <dir> "<brief>"`.
+
 ## [0.26.0] — 2026-10-14
 Saneamento de coerência (vistoria de 2026-10-14): o texto do overdev contradizia o hook, havia hash de senha e rol de linguagens com regras divergentes entre arquivos, e o `SKILL.md` repetia ~300 palavras por piso que já moram nas references.
 
