@@ -3,14 +3,22 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
-Pendente de release (sem bump de versão): a skill nova `schematize-models` precisa ter um ponto de entrada na base.
+## [0.27.1] — 2026-10-14
+A skill nova `schematize-models` precisa ter um ponto de entrada na base.
 
 ### Adicionado
 - **`references/orquestracao.md` §9.7** e 1 linha no `SKILL.md`: piso "mídia nunca pelo Claude" (imagem/visual gerado só por Codex ou Gemini, escolhido pelo usuário; nenhum disponível: dizer sem rodeio e oferecer alternativas) e ponteiro de roteamento multi-modelo para `schematize-models` (Claude fica com o código; outro modelo só por mídia, segunda opinião, vantagem documentada ou pedido do usuário).
 
 ### Alterado
 - `references/observabilidade.md` §16 e §17 viram **ponteiros** para a nova skill `schematize-observability` (dona do tema: padrão OpenTelemetry, cardinalidade, amostragem, burn-rate, stack, ambientes), preservando os headings §16.1 a §16.6, §17, §30 e §33 (outras skills os citam) e os pisos da base; §16.6 ganha "auditoria não é log de debug".
+
+### Alterado
+- Fontes herdadas (`assets/herdados/`) alteradas; os blocos nas derivadas seguem por `tools/sync-herdados.mjs`:
+- **Regra de imagem (decisão do usuário, vale sobre a v0.27.0):** imagem nunca pelo Claude; detectar Codex/Gemini e SEMPRE perguntar ao usuário qual usar, com Codex como primeira sugestão e não como automático. Ajustados `orquestracao.md` (cabeçalho, §9.3 tabela de roteamento e de papéis), `overdev.md`, `eng-overdev.md`, `eng-orchestrate.md`, `SKILL.md`, `assets/CLAUDE.md` e os herdados `orquestracao.md`/`precedencia.md`, coerentes com o §9.7.
+- `schematize-overdev delegar` -> `schematize overdev delegar` (era o comando do app, lido pelo lint como skill irmã inexistente) na fonte herdada e em `orquestracao.md`/`overdev.md`/`eng-orchestrate.md`.
+- `assets/herdados/precedencia.md`: nova variante **`dominio`** (skills de domínio/ferramenta herdam os pisos da base; seus comandos cobrem o domínio) — a `foraRol` dizia "cobrem só o piso da linguagem".
+- `SKILL.md`: linha `**Versão:**` corrigida para v0.27.0 (ficou em v0.26.0).
+- `/schematize-help`: catálogo passa a 37 skills (design, models, seo-writing, docker, terraform, observability nos grupos certos).
 
 ## [0.27.0] — 2026-10-14
 Hierarquia de agentes (ADR-0024): o orquestrador continua sem desenvolver, mas a escada deixa de ser só `sonnet → opus` e passa a roteamento por tipo de tarefa, com Codex e Cursor como motores de fallback.

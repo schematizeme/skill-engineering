@@ -1,6 +1,6 @@
 # Orquestração & paralelização — tempo do usuário acima de tokens
 
-> **Papéis e motor (§9):** o orquestrador (agent principal, **Claude Opus**) **não desenvolve** — planeja, despacha e revisa; quem executa é o **executor mais barato que resolve**: `haiku` (mecânico) ou `sonnet` (código), com escada **Sonnet → Codex `gpt-5.6-terra` → Cursor → subagent Opus → park**. Visual e imagem vão direto ao Codex (§9.3).
+> **Papéis e motor (§9):** o orquestrador (agent principal, **Claude Opus**) **não desenvolve** — planeja, despacha e revisa; quem executa é o **executor mais barato que resolve**: `haiku` (mecânico) ou `sonnet` (código), com escada **Sonnet → Codex `gpt-5.6-terra` → Cursor → subagent Opus → park**. Visual (UI) vai direto ao Codex (§9.3); imagem nunca pelo Claude: detecta Codex/Gemini e pergunta ao usuário qual usar (§9.7).
 >
 > Piso de **execução**: quando uma tarefa se divide em partes independentes, o padrão da casa é **decompor em mini-tasks e paralelizar com múltiplos subagents**, não fazer serial. O gargalo que otimizamos é o **relógio do usuário (wall-clock)**, não o orçamento de tokens. Preferimos gastar mais tokens e entregar em minutos a economizar tokens e levar horas. O que é vetado é o oposto: gastar 10× o tempo resolvendo serialmente algo que paralelizava.
 
@@ -93,7 +93,7 @@ Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda 
 | Muito simples / mecânica (localizar, renomear, editar 1–2 linhas, pesquisa simples) | **Haiku** (papel `trivial`) | mais rápido, ~1/100 do custo do Opus |
 | **Código** (padrão de toda micro-task) | **Sonnet** (papel `executor`) → escada abaixo | |
 | **Visual** (UI, layout, CSS, tema, ícone, regressão visual) | **Codex `gpt-5.6-terra` direto** (papel `visual`) | não passa pelo Sonnet |
-| **Imagem** (gerar/editar) | **pedir ao Codex Terra** (papel `imagem`, cota da assinatura) | **PROIBIDO** endpoint/API de imagem pago |
+| **Imagem** (gerar/editar) | **nunca pelo Claude**: detectar Codex/Gemini e **PERGUNTAR ao usuário qual usar** (papel `imagem`; Codex, cota da assinatura, é a primeira sugestão, não automática) | **PROIBIDO** endpoint/API de imagem pago (§9.7) |
 | 2ª opinião, revisão, testes, docs | Sonnet (papel `complementar`) | |
 
 **Escada de código** (cada degrau só se o anterior falhou):
@@ -114,12 +114,12 @@ Eventos de subagent são efêmeros: chat corrompe, a plataforma trava, uma onda 
 | `fallback-cursor` | cursor / auto | Codex falhou (se `cursor-agent` instalado) |
 | `fallback-2` | claude / opus | último recurso (subagent Opus) |
 | `visual` | codex / gpt-5.6-terra | UI/layout/CSS/tema/ícone |
-| `imagem` | codex / gpt-5.6-terra | imagem via cota da assinatura (sem API paga) |
+| `imagem` | codex / gpt-5.6-terra (sugerido) | só depois de perguntar ao usuário (Codex ou Gemini); cota da assinatura, sem API paga |
 | `complementar` | claude / sonnet | 2ª opinião, revisão, testes, docs |
 
 **Como chamar**
 - **Claude** (`principal`/`trivial`/`executor`/`fallback-2`/`complementar`): subagent via **Agent tool** com `model: "haiku"|"sonnet"|"opus"` (em workflow, `model: '...'`).
-- **Codex/Cursor:** `schematize-overdev delegar --papel <p> --brief-stdin --json` (brief no stdin; grava em `.schematize/overdev/delegacoes/`). **rc 3 = indisponível** (motor ausente, sem login ou papel inativo) → não invente: use o `proximo` do JSON (`delegar --listar` mostra papéis e disponibilidade). rc 2 = config inválida; rc 4 = motor falhou (conta como falha do degrau).
+- **Codex/Cursor:** `schematize overdev delegar --papel <p> --brief-stdin --json` (brief no stdin; grava em `.schematize/overdev/delegacoes/`). **rc 3 = indisponível** (motor ausente, sem login ou papel inativo) → não invente: use o `proximo` do JSON (`delegar --listar` mostra papéis e disponibilidade). rc 2 = config inválida; rc 4 = motor falhou (conta como falha do degrau).
 - **Fallback sem o overdev instalado:** `codex exec -m gpt-5.6-terra -s workspace-write --json -C <dir> "<brief>"`.
 - O principal **revisa** toda entrega, venha do motor que vier (§9.4).
 

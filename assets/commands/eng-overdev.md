@@ -28,7 +28,7 @@ aberto — o agente só fala com o usuário quando **tudo** estiver `- [x]` e o 
 
 0.4 **Derive o CHECKLIST do plano** → `.schematize/overdev/CHECKLIST.md` (+ espelho `OBJETIVO.md`).
    Exaustivo **por contagem**, um item por linha (`- [ ]`), cada um pequeno e com como provar
-   (teste/comando/gate) e **tag de executor** (`[sonnet]` default código; `[haiku]` mecânico; `[codex]` visual/imagem/fallback; `[opus: <motivo>]` só após
+   (teste/comando/gate) e **tag de executor** (`[sonnet]` default código; `[haiku]` mecânico; `[codex]` visual (UI)/fallback; imagem só após perguntar ao usuário (Codex ou Gemini); `[opus: <motivo>]` só após
    escalada — `orquestracao.md` §9). Se o usuário já tem checklist, **incorpore inteiro, sem resumir**.
    Cubra: implementação, testes, edge cases, erro/loading/vazio, doc-comment + índice/MAPA
    (§39), DoD (§35), archive (§28). Checklist magro = "terminei" precoce.

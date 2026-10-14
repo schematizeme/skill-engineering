@@ -12,7 +12,7 @@ description: >-
 
 Conjunto normativo que rege como software é projetado, construído, testado e operado aqui. Esta é a **base comum, agnóstica de linguagem** — o que se repete em toda a stack. As skills irmãs **especializam** esta base por contexto (linguagem, web, mobile, QA, pentest etc.); o catálogo completo, com o prefixo de comando de cada uma, é o `/schematize-help`. Use esta quando o projeto não é de uma linguagem específica, ou quando quer só os princípios da casa; use a irmã de linguagem quando há stack definida.
 
-**Versão:** skill `schematize-engineering` v0.26.0. Changelog em `CHANGELOG.md`.
+**Versão:** skill `schematize-engineering` v0.27.0. Changelog em `CHANGELOG.md`.
 
 ## Comandos (Claude Code)
 
@@ -87,7 +87,7 @@ Estes nunca são violados, nem "pra funcionar", nem "pra ir mais rápido". A lis
 - **Pisos de código:** arquivo ≤ 750 linhas (flag em > 300 úteis), uma função por arquivo, toda função com doc-comment, `MAPA.md` e índice de microfunções no archive, todo MD gerado no archive e nunca no root. Detalhe em `references/padroes-codigo.md` e `references/operacao.md` (§28, §39).
 - **Backend novo no rol sancionado (Go, Rust, Elixir, C#, Zig, Ruby), por fit + ADR**, sem hierarquia entre elas; frontend é Node (só front); Node-backend e PHP estão em saída (sem serviço novo; legado migra por funcionalidade quando tocado). Piso igual em toda linguagem. Escolha, desempate e linguagens fora do rol: `references/linguagens.md`; saída: `references/arquitetura.md` (§3).
 - **Tempo do usuário acima de tokens.** Tarefa com ≥3 unidades independentes e não-triviais é decomposta e paralelizada com subagents (fan-out 8/onda, teto 25), plan-first; trabalho acoplado ou pequeno é inline. Detalhe em `references/orquestracao.md`.
-- **Orquestrador não desenvolve; subagent barato executa.** O principal só planeja, despacha, supervisiona e revisa; principal = Claude Opus; executor mais barato que resolve (`haiku` mecânico, `sonnet` código → Codex `gpt-5.6-terra` → Cursor → subagent `opus` com motivo → `park`); visual direto ao Codex; imagem pedida ao Codex Terra (API de imagem paga proibida); papéis em `agentes.toml`; sem frota ociosa. Detalhe em `references/orquestracao.md` (§9, §9.6).
+- **Orquestrador não desenvolve; subagent barato executa.** O principal só planeja, despacha, supervisiona e revisa; principal = Claude Opus; executor mais barato que resolve (`haiku` mecânico, `sonnet` código → Codex `gpt-5.6-terra` → Cursor → subagent `opus` com motivo → `park`); visual direto ao Codex; imagem nunca pelo Claude (pergunta ao usuário qual usar, Codex sugerido; API de imagem paga proibida); papéis em `agentes.toml`; sem frota ociosa. Detalhe em `references/orquestracao.md` (§9, §9.6).
 - **Mídia nunca pelo Claude; roteamento multi-modelo -> `schematize-models`.** Imagem/visual gerado só por Codex ou Gemini (o usuário escolhe; nenhum disponível: dizer sem rodeio); Claude fica com o código. Detalhe em `references/orquestracao.md` §9.7.
 - **Fluxo de ambientes e ops.** dev local → teste local → GitHub → hml → prd; VETADO editar direto no servidor; 100% das operações pelo `<projeto>_ops`, instalação paralela (`nproc`), independência dos serviços como invariante. Detalhe em `references/ops.md`.
 - **Deploy destrutivo por seed + um user Linux por serviço.** Redeploy recria a app a partir do seed (`/<app>/.env`) preservando os dados; cada serviço em systemd hardened. Detalhe em `references/ops.md` (§2–§3).

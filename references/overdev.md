@@ -62,8 +62,8 @@ mais barato ao mais caro.
   código → `sonnet` → falhou, o **mesmo subagent corrige** (até 2 rodadas) → **Codex
   `gpt-5.6-terra`** → **Cursor** (se instalado) → **subagent `opus`**, com **motivo da escalada**
   registrado → esgotou → `park` + `- [~]` (§4). **Visual (UI/CSS/tema/ícone) vai direto ao Codex;
-  imagem é pedida ao Codex Terra (PROIBIDO API de imagem paga).** Codex/Cursor via
-  `schematize-overdev delegar --papel <p> --brief-stdin --json` (rc 3 → `proximo`).
+  imagem nunca pelo Claude: pergunta-se ao usuário qual usar, Codex sugerido (PROIBIDO API de imagem paga).** Codex/Cursor via
+  `schematize overdev delegar --papel <p> --brief-stdin --json` (rc 3 → `proximo`).
 - Cada item do CHECKLIST carrega a tag de executor: **`[sonnet]`** (default código), `[haiku]`,
   `[codex]`, `[cursor]` ou **`[opus: <motivo>]`**. Escalada e rodadas de correção ficam no checkpoint/archive do overdev
   (`<projeto>_archive/overdev/`, e `orchestration/` quando há fan-out). Unidades independentes (≥3) vão pra **fan-out de subagents**

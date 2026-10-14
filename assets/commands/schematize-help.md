@@ -1,5 +1,5 @@
 ---
-description: Índice ÚNICO de todos os comandos schematize instalados (as 31 skills da casa) — o que cada um faz, agrupado por skill
+description: Índice ÚNICO de todos os comandos schematize instalados (as 37 skills da casa) — o que cada um faz, agrupado por skill
 ---
 
 Mostre o **índice completo** dos comandos schematize — todas as skills num lugar só. É o "help dos helps".
@@ -27,7 +27,7 @@ Uma tabela por **grupo** (seção 3), só com as skills **instaladas**; colunas:
 
 Padrões comuns a quase todas (explique 1 vez, no topo): `/<prefixo>-help` lista os comandos da skill · `/<prefixo>-load` carrega TODO o corpo normativo · `/<prefixo>-claude` instala/mescla o `CLAUDE.md` sempre-on · `/<prefixo>-index` (re)gera índice/MAPA no archive · `/<prefixo>-review` gate da DoD/anti-padrões no diff · `/<prefixo>-cc` / `/<prefixo>-handoff` context compact / handoff no archive. Depois liste **só os comandos próprios** de cada skill, com destaque (ex.: `/eng-overdev`, `/eng-orchestrate`, `/eng-scan`, `/qa-plan`, `/pentest-gate`, `/archive-todos`, `/scaffold-new`).
 
-## 3. Catálogo das 31 skills (slug · prefixo de comando · domínio)
+## 3. Catálogo das 37 skills (slug · prefixo de comando · domínio)
 
 Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 
@@ -40,6 +40,7 @@ Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 - `schematize-qa` · `/qa-*` — Q.A.: pirâmide de testes, "verde de verdade", plan-first.
 - `schematize-pentest` · `/pentest-*` — segurança ofensiva defensiva/red-team autorizado.
 - `schematize-docs` · `/docs-*` — ADR, runbook, OpenAPI, índice/MAPA.
+- `schematize-models` · `/models-*` — orquestra Codex, Gemini e Cursor como subagents; imagem sempre fora do Claude (pergunta qual usar); saída externa não confiável.
 
 **Linguagens do rol de backend (por fit + ADR, sem hierarquia)**
 - `schematize-go` · `/go-*` · `schematize-rust` · `/rust-*` · `schematize-elixir` · `/elixir-*` · `schematize-csharp` · **`/cs-*`** · `schematize-zig` · `/zig-*` · `schematize-ruby` · `/ruby-*`. Escolha e desempate: `schematize-engineering → references/linguagens.md`.
@@ -51,8 +52,9 @@ Marque cada uma como instalada ou não comparando com `ls ~/.claude/skills`.
 - `schematize-node` · `/node-*` — manutenção de legado Node/TS (sem backend novo; PHP migra quando tocado).
 
 **Domínio**
-- `schematize-web` · `/web-*` — frontend (Next.js/Astro). `schematize-mobile` · `/mobile-*` — apps iOS/Android/cross. `schematize-desktop` · `/desktop-*` — software local/nativo.
+- `schematize-web` · `/web-*` — frontend (Next.js/Astro). `schematize-design` · `/design-*` — direção visual, wireframe antes do código, anti-AI-slop. `schematize-mobile` · `/mobile-*` — apps iOS/Android/cross. `schematize-desktop` · `/desktop-*` — software local/nativo.
 - `schematize-data` · `/data-*` — engenharia de dados. `schematize-database` · `/database-*` — modelagem relacional. `schematize-ai` · `/ai-*` — software com LLM.
-- `schematize-infra` · `/infra-*` — infra/DevOps/SRE. `schematize-seo` · `/seo-*` — SEO. `schematize-institutional` · `/institutional-*` — site institucional.
+- `schematize-infra` · `/infra-*` — infra/DevOps/SRE. `schematize-docker` · `/docker-*` — Dockerfile/OCI, compose, SBOM, cosign, hardening. `schematize-terraform` · `/tf-*` — IaC com OpenTofu/Terraform (state, módulos, plan/apply gated). `schematize-observability` · `/obs-*` — OpenTelemetry, SLO, alertas, dashboards como código.
+- `schematize-seo` · `/seo-*` — SEO (estratégia e técnico). `schematize-seo-writing` · `/seow-*` — redação SEO em 4 passos com checador. `schematize-institutional` · `/institutional-*` — site institucional.
 
 Skill faltando? Instale: `git clone https://github.com/schematizeme/skill-<slug>.git && ./skill-<slug>/install.sh` (ou `install.sh ~` pra global). Detalhe de qualquer comando: abra o `.md` dele em `.claude/commands/` ou rode o `/<prefixo>-load`. Catálogo web: `skills.schematize.me`.
