@@ -12,6 +12,13 @@ O catálogo passou a 45 skills e 8 delas tomaram assuntos que a base detalhava; 
 - `/eng-iam` cita `/iam-audit` e `/iam-review`.
 - description reduzida a 190 caracteres (orçamento de descriptions do catálogo estourou com 45 skills).
 
+### Adicionado
+- Testes com vermelho plantado para `scripts/archive-secret-scan.sh`, `scripts/check-diff.sh` e `scripts/build-zip.sh` (o gate de `schematize-skill-dev` cobra teste em todo script).
+
+### Corrigido (achado pelos testes novos)
+- `archive-secret-scan.sh`: a regra de `password=` usava `[^ \n"']`; em ERE o `\n` dentro de colchete é a letra `n`, então senha com `n` passava em branco. Agora `[^ "']`.
+- `check-diff.sh`: CORS `*` não pegava `Set("Access-Control-Allow-Origin", "*")` (faltava a vírgula na classe); base inexistente (ex.: `origin/main` ausente no CI) dava OK com diff vazio e agora bloqueia.
+
 ## [0.27.1] — 2026-10-14
 A skill nova `schematize-models` precisa ter um ponto de entrada na base.
 
