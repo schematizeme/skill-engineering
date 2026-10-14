@@ -3,9 +3,9 @@ name: schematize-engineering
 metadata:
   version: 0.25.0
 description: >-
-  Base normativa de engenharia da casa, agnóstica de linguagem. Use ao projetar, gerar, revisar ou refatorar
-  software, escolher stack do rol (Go/Rust/Elixir/C#/Zig/Ruby, por fit + ADR), modelar eventos/banco, definir
-  observabilidade, ADR/runbook/archive, ou nas disciplinas scan, plan, refactor, audit, overdev e orquestração.
+  Base normativa de engenharia, agnóstica de linguagem. Use ao projetar, revisar ou refatorar software, escolher
+  stack do rol (Go/Rust/Elixir/C#/Zig/Ruby, fit + ADR), modelar eventos/banco, definir observabilidade,
+  ADR/runbook/archive, ou nas disciplinas scan, plan, refactor, overdev.
 ---
 
 # Padrões de Engenharia da Casa (base comum)

@@ -20,6 +20,8 @@ Saneamento de coerência (vistoria de 2026-10-14): o texto do overdev contradizi
 
 ### Alterado
 - **`SKILL.md`**: pisos reduzidos a 1–3 linhas com ponteiro à reference (a regra mora lá; nenhuma removida); descrição ≤ 350 caracteres; irmãs apontam para `/schematize-help`; citações a "item 48/49" viram §37 por título.
+- **Description** reduzida (~270 chars) para caber no orçamento de listagem (soma das 31 skills ≤ 8500; o Claude Code corta a listagem acima disso).
+- **CI:** actions de terceiros pinadas por SHA completo com comentário `# vX.Y.Z` (mesma major em uso; supply chain), mesmo SHA em todas as skills.
 
 ## [0.25.0] — 2026-09-30
 Ajuste de aplicabilidade: o checkpoint em MD antes de toda onda era pesado demais para tarefas pequenas e vinha sendo pulado na prática (2 rodadas de 6 e 2 agents); regra que não se cumpre vira ruído. Também: a descrição do frontmatter estava no teto de 1024 e enumerava pisos em vez de gatilhos; e os papéis do overdev eram só texto, sem enforcement.
