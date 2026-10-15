@@ -3,6 +3,17 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [0.29.0] — 2026-10-15
+Skill só carrega sob demanda; em máquina nova o agente ignorava a orquestração com subagents. Nasce o núcleo sempre-on.
+
+### Adicionado
+- `assets/CORE.md`: núcleo curto (≤4 KB) que o app `schematize` instala no `~/.claude/CLAUDE.md` global (entre marcadores) e injeta via hook SessionStart; condensa pisos 13/19 e `orquestracao.md` §9/§9.6/§9.7, mídia, overdev, GitHub como fonte da verdade e efeito externo. Marcador `<!-- schematize-core vX.Y.Z -->` para o app detectar desatualização.
+- `scripts/core-md.test.sh`: falha se o CORE.md passar de 4096 bytes/60 linhas ou o marcador divergir de `VERSION`.
+- `SKILL.md` e `assets/CLAUDE.md` apontam para o CORE.md.
+
+### Mantido (piso inalterado)
+- Todos os pisos e referências: nenhuma regra nova, apenas condensação das existentes.
+
 ## [0.28.1] — 2026-10-14
 O catálogo passou a 46 skills com a entrada de `schematize-bots`.
 

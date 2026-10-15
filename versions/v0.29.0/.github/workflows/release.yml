@@ -1,0 +1,32 @@
+# Release: ao empurrar uma tag `v*`, gera skill-engineering.zip e cria o GitHub Release.
+# Actions pinadas por SHA completo (regra da casa, commit 41435e9). Sem actions de terceiros:
+# o release é criado com o `gh` do runner.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+      - name: Guarda tag == v$(cat VERSION)
+        run: |
+          esperado="v$(tr -d '[:space:]' < VERSION)"
+          if [ "$GITHUB_REF_NAME" != "$esperado" ]; then
+            echo "::error::tag $GITHUB_REF_NAME difere de $esperado (VERSION)"; exit 1
+          fi
+      - name: Empacotar
+        run: scripts/build-zip.sh skill-engineering.zip
+      - name: Criar o release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" skill-engineering.zip \
+            --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --verify-tag \
+            --notes "schematize-engineering $GITHUB_REF_NAME — ver CHANGELOG.md."

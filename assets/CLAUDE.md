@@ -6,6 +6,8 @@
 > A skill `schematize-engineering` traz o detalhe completo e o andaime (scripts/templates).
 > **Repo multi-linguagem** (rol sancionado: Go/Rust/Elixir/C#/Zig/Ruby + Web; Node/PHP legado): use **junto** com os `CLAUDE.md` das outras skills — cada um governa sua fronteira (a linguagem de cada serviço, o legado, o frontend); não sobrescreva os outros (rode o `/<slug>-claude` de cada).
 
+> Os pisos 13 e 19 também vivem no núcleo global sempre-on `assets/CORE.md` (instalado em `~/.claude/CLAUDE.md` pelo app `schematize`).
+
 ## Regra mestre
 
 Toda tarefa de engenharia neste repo segue os **Padrões de Engenharia da Casa**
